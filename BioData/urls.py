@@ -54,9 +54,6 @@ urlpatterns = [
     path ('fastingbloodsugar/', views.FastingBloodSugarList.as_view() ),
     path ('fastingbloodsugar/<int:pk>/', views.FastingBloodSugarDetail.as_view() ),
 
-    # path('glycatedhaemoglobin/', views.GlycatedHemoglobinList.as_view() ),
-    # path('glycatedhaemoglobin/<int:pk>/', views.GlycatedHemoglobinDetail.as_view() ),
-
     path('bodymassindex/', views.BodyMassIndexList.as_view() ),
     path('bodymassindex/<int:pk>/', views.BodyMassIndexDetail.as_view() ),
 
