@@ -35,6 +35,9 @@ urlpatterns = [
 
     path('bloodpressure/', views.BloodPressureList.as_view() ),
     path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
+
+    path('temperature/', views.TemperatureList.as_view() ),
+    path('temperature/<int:pk>/', views.TemperatureDetail.as_view() ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
