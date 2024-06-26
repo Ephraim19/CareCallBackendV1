@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,RespiratorySerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -150,3 +150,11 @@ class RandomBloodSugarList(generics.ListCreateAPIView):
 class RandomBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RandomBloodSugar.objects.all()
     serializer_class = RandomBloodSugarSerializer
+
+class FasingBloodSugarList(generics.ListCreateAPIView):
+    queryset = FasingBloodSugar.objects.all()
+    serializer_class = FasingBloodSugarSerializer
+
+class FasingBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FasingBloodSugar.objects.all()
+    serializer_class = FasingBloodSugarSerializer
