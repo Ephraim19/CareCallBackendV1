@@ -29,6 +29,38 @@ urlpatterns = [
     
     path('social/', views.SocialList.as_view() ),
     path('social/<int:pk>/', views.SocialDetail.as_view() ),
+
+    path('interaction/', views.InteractionList.as_view() ),
+    path('interaction/<int:pk>/', views.InteractionDetail.as_view() ),
+
+    path('bloodpressure/', views.BloodPressureList.as_view() ),
+    path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
+
+    path('temperature/', views.TemperatureList.as_view() ),
+    path('temperature/<int:pk>/', views.TemperatureDetail.as_view() ),
+
+    path('oxygensaturation/', views.OxygenList.as_view() ),
+    path('oxygensaturation/<int:pk>/', views.OxygenDetail.as_view() ),
+
+    path('pulse/', views.PulseList.as_view() ),
+    path('pulse/<int:pk>/', views.PulseDetail.as_view() ),
+
+
+    path('respiratoryrate/', views.RespiratoryRateList.as_view() ),
+    path('respiratoryrate/<int:pk>/', views.RespiratoryRateDetail.as_view() ),
+
+    path('randombloodsugar/', views.RandomBloodSugarList.as_view() ),
+    path('randombloodsugar/<int:pk>/', views.RandomBloodSugarDetail.as_view() ),
+
+
+    path ('fastingbloodsugar/', views.FastingBloodSugarList.as_view() ),
+    path ('fastingbloodsugar/<int:pk>/', views.FastingBloodSugarDetail.as_view() ),
+
+    path('bodymassindex/', views.BodyMassIndexList.as_view() ),
+    path('bodymassindex/<int:pk>/', views.BodyMassIndexDetail.as_view() ),
+
+    path('glycatedhaemoglobin/', views.GlycatedHemoglobinList.as_view() ),
+    path('glycatedhaemoglobin/<int:pk>/', views.GlycatedHemoglobinDetail.as_view() ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
