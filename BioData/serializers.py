@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,FastingBloodSugar,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -262,6 +262,22 @@ class FastingBloodSugarSerializer(serializers.ModelSerializer):
             instance.fbs = validated_data.get("fbs",instance.fbs)
             instance.save()
             return instance
+        
+class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GlycatedHaemoglobin
+        fields = ['id','memberId','hba1c','readingDate']
+        
+        def create(self,validated_data):
+            return GlycatedHaemoglobin.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.hba1c = validated_data.get("hba1c",instance.hba1c)
+            instance.save()
+            return instance
 
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)
@@ -280,6 +296,7 @@ class MemberSerializer (serializers.ModelSerializer):
     respiratory = RespiratorySerializer(many=True, read_only=True)
     rbs = RandomBloodSugarSerializer(many=True, read_only=True)
     fbs = FastingBloodSugarSerializer(many=True, read_only=True)
+    hba1c = GlycateHaemoglobinSerializer(many=True, read_only=True)
 
 
     
@@ -291,7 +308,7 @@ class MemberSerializer (serializers.ModelSerializer):
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
                   'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
-                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs'
+                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c'
                   ]
         
         

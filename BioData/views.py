@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -18,8 +18,6 @@ class DependantList(generics.ListCreateAPIView):
     
     queryset = Dependant.objects.all()
     serializer_class = DependantSerializer
-
-    
     
     
 class DependantDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -151,10 +149,18 @@ class RandomBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RandomBloodSugar.objects.all()
     serializer_class = RandomBloodSugarSerializer
 
-class FasingBloodSugarList(generics.ListCreateAPIView):
-    queryset = FasingBloodSugar.objects.all()
-    serializer_class = FasingBloodSugarSerializer
+class FastingBloodSugarList(generics.ListCreateAPIView):
+    queryset = FastingBloodSugar.objects.all()
+    serializer_class = FastingBloodSugarSerializer
 
-class FasingBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = FasingBloodSugar.objects.all()
-    serializer_class = FasingBloodSugarSerializer
+class FastingBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FastingBloodSugar.objects.all()
+    serializer_class = FastingBloodSugarSerializer
+
+class GlycatedHemoglobinList(generics.ListCreateAPIView):
+    queryset = GlycatedHaemoglobin.objects.all()
+    serializer_class = GlycateHaemoglobinSerializer
+
+class GlycatedHemoglobinDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = GlycatedHaemoglobin.objects.all()
+    serializer_class = GlycateHaemoglobinSerializer

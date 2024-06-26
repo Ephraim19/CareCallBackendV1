@@ -157,6 +157,12 @@ class FastingBloodSugar(models.Model):
     readingDate = models.DateField()
     fbs = models.IntegerField()
     
+class GlycatedHaemoglobin(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='hba1c', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    readingDate = models.DateField()
+    hba1c = models.IntegerField()
     
     
     
