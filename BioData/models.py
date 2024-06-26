@@ -163,6 +163,13 @@ class GlycatedHaemoglobin(models.Model):
     updatedBy = models.EmailField()
     readingDate = models.DateField()
     hba1c = models.IntegerField()
+
+class BodyMassIndex(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='bmi', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    readingDate = models.DateField()
+    bmi = models.IntegerField()
     
     
     

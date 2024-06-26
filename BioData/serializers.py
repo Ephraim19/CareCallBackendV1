@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -276,6 +276,22 @@ class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
             instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.hba1c = validated_data.get("hba1c",instance.hba1c)
+            instance.save()
+            return instance
+        
+class BodyMassIndexSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BodyMassIndex
+        fields = ['id','memberId','bmi','readingDate']
+        
+        def create(self,validated_data):
+            return BodyMassIndex.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.bmi = validated_data.get("bmi",instance.bmi)
             instance.save()
             return instance
 

@@ -56,6 +56,9 @@ urlpatterns = [
 
     path('glycatedhaemoglobin/', views.GlycatedHaemoglobinList.as_view() ),
     path('glycatedhaemoglobin/<int:pk>/', views.GlycatedHaemoglobinDetail.as_view() ),
+
+    path('bodymassindex/', views.BodyMassIndexList.as_view() ),
+    path('bodymassindex/<int:pk>/', views.BodyMassIndexDetail.as_view() ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
