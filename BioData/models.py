@@ -92,7 +92,26 @@ class Social(models.Model):
     atriskDueTo = models.CharField(max_length=50)
     
     
-    
+class InteractionLog(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='interaction', on_delete=models.CASCADE)
+    channel = models.CharField(max_length=20,blank=True,null=True)
+    updatedBy = models.EmailField()
+    channelDirection = models.CharField(max_length=20,blank=True,null=True)
+    interactionDetails = models.TextField()
+
+class BloodPressure(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='bloodpressure', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    notes = models.TextField()
+    readingDate = models.DateField()
+    systolic = models.IntegerField()
+    diastolic = models.IntegerField()
+    pulse = models.IntegerField()
+
+
+
     
     
     

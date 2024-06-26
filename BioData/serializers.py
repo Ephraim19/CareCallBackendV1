@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -132,6 +132,42 @@ class SocialSerializer (serializers.ModelSerializer):
             instance.atriskDueTo = validated_data.get("atriskDueTo",instance.atriskDueTo)
             instance.save()
             return instance
+        
+class InteractionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InteractionLog
+        fields = '__all__'
+
+    def create(self,validated_data):
+        return InteractionLog.objects.all(**validated_data)
+    
+    def update(self,instance,validated_data):
+        instance.channel = validated_data.get("channel",instance.channel)
+        instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+        instance.channelDirection = validated_data.get("channelDirection",instance.channelDirection)
+        instance.interactionDetails = validated_data.get("interactionDetails",instance.interactionDetails)
+        instance.save()
+        return instance
+    
+class BloodPressureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BloodPressure
+        fields = '__all__'
+        
+        def create(self,validated_data):
+            return BloodPressure.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.systolic = validated_data.get("systolic",instance.systolic)
+            instance.diastolic = validated_data.get("diastolic",instance.diastolic)
+            instance.pulse = validated_data.get("pulse",instance.pulse)
+            instance.save()
+            return instance
+
+        
 
             
 class MemberSerializer (serializers.ModelSerializer):

@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -93,3 +93,19 @@ class SocialList(generics.ListCreateAPIView):
 class SocialDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Social.objects.all()
     serializer_class = SocialSerializer
+
+class InteractionList(generics.ListCreateAPIView):
+    queryset = InteractionLog.objects.all()
+    serializer_class = InteractionSerializer
+    
+class InteractionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InteractionLog.objects.all()
+    serializer_class = InteractionSerializer
+
+class BloodPressureList(generics.ListCreateAPIView):
+    queryset = BloodPressure.objects.all()
+    serializer_class = BloodPressureSerializer
+
+class BloodPressureDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BloodPressure.objects.all()
+    serializer_class = BloodPressureSerializer

@@ -29,6 +29,12 @@ urlpatterns = [
     
     path('social/', views.SocialList.as_view() ),
     path('social/<int:pk>/', views.SocialDetail.as_view() ),
+
+    path('interaction/', views.InteractionList.as_view() ),
+    path('interaction/<int:pk>/', views.InteractionDetail.as_view() ),
+
+    path('bloodpressure/', views.BloodPressureList.as_view() ),
+    path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
