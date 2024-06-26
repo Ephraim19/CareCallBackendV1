@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -212,6 +212,22 @@ class PulseSerializer(serializers.ModelSerializer):
             instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.pulse = validated_data.get("pulse",instance.pulse)
+            instance.save()
+            return instance
+        
+class RespiratorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RespiratoryRate
+        fields = '__all__'
+        
+        def create(self,validated_data):
+            return RespiratoryRate.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.respiratory = validated_data.get("respiratory",instance.respiratory)
             instance.save()
             return instance
             

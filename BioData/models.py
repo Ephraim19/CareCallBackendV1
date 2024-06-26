@@ -135,6 +135,13 @@ class PulseRate(models.Model):
     readingDate = models.DateField()
     pulse = models.IntegerField()
     
+class RespiratoryRate(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='respiratory', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    notes = models.TextField()
+    readingDate = models.DateField()
+    respiratory = models.IntegerField()
     
     
 
