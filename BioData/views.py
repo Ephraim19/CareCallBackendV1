@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -118,3 +118,11 @@ class TemperatureList(generics.ListCreateAPIView):
 class TemperatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Temperature.objects.all()
     serializer_class = TemperatureSerializer
+
+class OxygenList(generics.ListCreateAPIView):
+    queryset = Oxygen.objects.all()
+    serializer_class = OxygenSerializer
+
+class OxygenDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Oxygen.objects.all()
+    serializer_class = OxygenSerializer

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -183,6 +183,21 @@ class TemperatureSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
 
+class OxygenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Oxygen
+        fields = '__all__'
+        
+        def create(self,validated_data):
+            return Oxygen.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.oxygen = validated_data.get("oxygen",instance.oxygen)
+            instance.save()
+            return instance
         
 
             

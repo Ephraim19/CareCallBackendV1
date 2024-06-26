@@ -119,6 +119,13 @@ class Temperature(models.Model):
     temperature = models.IntegerField()
 
     
+class Oxygen(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='temperature', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    notes = models.TextField()
+    readingDate = models.DateField()
+    oxygen = models.IntegerField()
     
     
     
