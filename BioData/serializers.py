@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -199,7 +199,21 @@ class OxygenSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
         
-
+class PulseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PulseRate
+        fields = '__all__'
+        
+        def create(self,validated_data):
+            return PulseRate.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.pulse = validated_data.get("pulse",instance.pulse)
+            instance.save()
+            return instance
             
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)
@@ -210,6 +224,11 @@ class MemberSerializer (serializers.ModelSerializer):
     admission = AdmissionSerializer(many=True, read_only=True)
     family = FamilySerializer(many=True, read_only=True)
     social = SocialSerializer(many=True, read_only=True)
+    interactionlog = InteractionSerializer(many=True, read_only=True)
+    bloodpressure = BloodPressureSerializer(many=True, read_only=True)
+    temperature = TemperatureSerializer(many=True, read_only=True)
+    oxygen = OxygenSerializer(many=True, read_only=True)
+    pulse = PulseSerializer(many=True, read_only=True)
     
     class Meta:
         model = Member
@@ -218,7 +237,8 @@ class MemberSerializer (serializers.ModelSerializer):
                   'memberCounty', 'memberTown', 'memberDelivery', 'memberProgram', 'memberStatus',
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
-                  'dependants','overview','allergy','surgery','othernote','admission','family','social'
+                  'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
+                  'bloodpressure','temperature','oxygen','pulse'
                   ]
         
         

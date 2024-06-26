@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -126,3 +126,11 @@ class OxygenList(generics.ListCreateAPIView):
 class OxygenDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Oxygen.objects.all()
     serializer_class = OxygenSerializer
+
+class pulseList(generics.ListCreateAPIView):
+    queryset = PulseRate.objects.all()
+    serializer_class = PulseSerializer
+
+class pulseDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PulseRate.objects.all()
+    serializer_class = PulseSerializer
