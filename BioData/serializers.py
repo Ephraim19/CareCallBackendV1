@@ -313,7 +313,7 @@ class MemberSerializer (serializers.ModelSerializer):
     rbs = RandomBloodSugarSerializer(many=True, read_only=True)
     fbs = FastingBloodSugarSerializer(many=True, read_only=True)
     hba1c = GlycateHaemoglobinSerializer(many=True, read_only=True)
-
+    bmi = BodyMassIndexSerializer(many=True, read_only=True)
 
     
     class Meta:
@@ -324,7 +324,7 @@ class MemberSerializer (serializers.ModelSerializer):
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
                   'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
-                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c'
+                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c','bmi'
                   ]
         
         
