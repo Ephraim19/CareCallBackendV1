@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -231,6 +231,22 @@ class RespiratorySerializer(serializers.ModelSerializer):
             instance.save()
             return instance
             
+class RandomBloodSugarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RandomBloodSugar
+        fields = ['id','memberId','rbs','readingDate']
+        
+        def create(self,validated_data):
+            return RandomBloodSugar.objects.all(**validated_data)
+        
+        def update(self,instance,validated_data):
+            instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
+            instance.notes = validated_data.get("notes",instance.notes)
+            instance.readingDate = validated_data.get("readingDate",instance.readingDate)
+            instance.rbs = validated_data.get("rbs",instance.rbs)
+            instance.save()
+            return instance
+
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)
     overview = OverviewSerializer(many=True, read_only=True)
@@ -245,6 +261,8 @@ class MemberSerializer (serializers.ModelSerializer):
     temperature = TemperatureSerializer(many=True, read_only=True)
     oxygen = OxygenSerializer(many=True, read_only=True)
     pulse = PulseSerializer(many=True, read_only=True)
+    respiratory = RespiratorySerializer(many=True, read_only=True)
+
     
     class Meta:
         model = Member
@@ -254,7 +272,7 @@ class MemberSerializer (serializers.ModelSerializer):
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
                   'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
-                  'bloodpressure','temperature','oxygen','pulse'
+                  'bloodpressure','temperature','oxygen','pulse','respiratory'
                   ]
         
         

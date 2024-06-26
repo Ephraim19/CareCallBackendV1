@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,RespiratorySerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,RespiratorySerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -127,11 +127,11 @@ class OxygenDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Oxygen.objects.all()
     serializer_class = OxygenSerializer
 
-class pulseList(generics.ListCreateAPIView):
+class PulseList(generics.ListCreateAPIView):
     queryset = PulseRate.objects.all()
     serializer_class = PulseSerializer
 
-class pulseDetail(generics.RetrieveUpdateDestroyAPIView):
+class PulseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PulseRate.objects.all()
     serializer_class = PulseSerializer
 
@@ -142,3 +142,11 @@ class RespiratoryRateList(generics.ListCreateAPIView):
 class RespiratoryRateDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RespiratoryRate.objects.all()
     serializer_class = RespiratorySerializer
+
+class RandomBloodSugarList(generics.ListCreateAPIView):
+    queryset = RandomBloodSugar.objects.all()
+    serializer_class = RandomBloodSugarSerializer
+
+class RandomBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RandomBloodSugar.objects.all()
+    serializer_class = RandomBloodSugarSerializer

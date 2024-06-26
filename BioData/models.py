@@ -143,7 +143,12 @@ class RespiratoryRate(models.Model):
     readingDate = models.DateField()
     respiratory = models.IntegerField()
     
-    
+class RandomBloodSugar(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, related_name='rbs', on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    readingDate = models.DateField()
+    rbs = models.IntegerField()
 
     
     

@@ -47,7 +47,9 @@ urlpatterns = [
 
     path('respiratoryrate/', views.RespiratoryRateList.as_view() ),
     path('respiratoryrate/<int:pk>/', views.RespiratoryRateDetail.as_view() ),
-    
+
+    path('randombloodsugar/', views.RandomBloodSugarList.as_view() ),
+    path('randombloodsugar/<int:pk>/', views.RandomBloodSugarDetail.as_view() ),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
