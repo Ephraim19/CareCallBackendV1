@@ -52,6 +52,12 @@ class Overview(models.Model):
     overviewRiskScore = models.IntegerField()
     overviewHealthGoals = models.TextField()
     overViewBloodGroup = models.CharField(max_length=3)
+
+class Condition(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member,related_name='condition', on_delete=models.CASCADE)
+    condition = models.CharField(max_length=20)
+    status = models.CharField(max_length=100) 
     
     
 
@@ -104,72 +110,68 @@ class BloodPressure(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='bloodpressure', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    notes = models.TextField()
     readingDate = models.DateField()
-    systolic = models.IntegerField()
-    diastolic = models.IntegerField()
-    pulse = models.IntegerField()
+    systolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    diastolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 
 class Temperature(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='temperature', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    notes = models.TextField()
     readingDate = models.DateField()
-    temperature = models.IntegerField()
+    temperature = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 
     
 class Oxygen(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='oxygen', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    notes = models.TextField()
     readingDate = models.DateField()
-    oxygen = models.IntegerField()
+    oxygen = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 
 class PulseRate(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='pulse', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    notes = models.TextField()
     readingDate = models.DateField()
-    pulse = models.IntegerField()
+    pulse = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     
 class RespiratoryRate(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='respiratory', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    notes = models.TextField()
     readingDate = models.DateField()
-    respiratory = models.IntegerField()
+    respiratory = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     
 class RandomBloodSugar(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='rbs', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
     readingDate = models.DateField()
-    rbs = models.IntegerField()
+    rbs = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 
 class FastingBloodSugar(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='fbs', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
     readingDate = models.DateField()
-    fbs = models.IntegerField()
+    fbs = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     
 class GlycatedHaemoglobin(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='hba1c', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
     readingDate = models.DateField()
-    hba1c = models.IntegerField()
+    hba1c = models.DecimalField(max_digits=5, decimal_places=2)
 
 class BodyMassIndex(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='bmi', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
     readingDate = models.DateField()
-    bmi = models.IntegerField()
+    height = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    
     
     
     

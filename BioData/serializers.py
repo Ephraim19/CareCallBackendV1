@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -159,11 +159,9 @@ class BloodPressureSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.systolic = validated_data.get("systolic",instance.systolic)
             instance.diastolic = validated_data.get("diastolic",instance.diastolic)
-            instance.pulse = validated_data.get("pulse",instance.pulse)
             instance.save()
             return instance
         
@@ -177,7 +175,6 @@ class TemperatureSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.temperature = validated_data.get("temperature",instance.temperature)
             instance.save()
@@ -193,7 +190,6 @@ class OxygenSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.oxygen = validated_data.get("oxygen",instance.oxygen)
             instance.save()
@@ -209,7 +205,6 @@ class PulseSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.pulse = validated_data.get("pulse",instance.pulse)
             instance.save()
@@ -225,7 +220,6 @@ class RespiratorySerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.respiratory = validated_data.get("respiratory",instance.respiratory)
             instance.save()
@@ -241,7 +235,6 @@ class RandomBloodSugarSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.rbs = validated_data.get("rbs",instance.rbs)
             instance.save()
@@ -257,7 +250,6 @@ class FastingBloodSugarSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.fbs = validated_data.get("fbs",instance.fbs)
             instance.save()
@@ -273,7 +265,6 @@ class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.hba1c = validated_data.get("hba1c",instance.hba1c)
             instance.save()
@@ -282,16 +273,31 @@ class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
 class BodyMassIndexSerializer(serializers.ModelSerializer):
     class Meta:
         model = BodyMassIndex
-        fields = ['id','memberId','bmi','readingDate']
+        fields = ['id','memberId','readingDate','height','weight']
         
         def create(self,validated_data):
             return BodyMassIndex.objects.all(**validated_data)
         
         def update(self,instance,validated_data):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
-            instance.notes = validated_data.get("notes",instance.notes)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
-            instance.bmi = validated_data.get("bmi",instance.bmi)
+            instance.height = validated_data.get("height",instance.height)
+            instance.weight = validated_data.get("weight",instance.weight)
+            instance.save()
+            return instance
+        
+
+class ConditionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Condition
+        fields = ['id', 'memberId', 'condition', 'status']
+                
+        def create(self, validated_data):
+            return Condition.objects.create(**validated_data)
+                
+        def update(self, instance, validated_data):
+            instance.condition = validated_data.get('condition', instance.condition)
+            instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
 
@@ -314,6 +320,7 @@ class MemberSerializer (serializers.ModelSerializer):
     fbs = FastingBloodSugarSerializer(many=True, read_only=True)
     hba1c = GlycateHaemoglobinSerializer(many=True, read_only=True)
     bmi = BodyMassIndexSerializer(many=True, read_only=True)
+    condition = ConditionSerializer(many=True, read_only=True)
 
     
     class Meta:
@@ -324,7 +331,7 @@ class MemberSerializer (serializers.ModelSerializer):
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
                   'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
-                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c','bmi'
+                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c','bmi','condition'
                   ]
         
         
