@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Dependant,Overview,InitialConsultationDoctor,InitialConsultationNutritionist,InitialConsultationPsychologist,InitialMentalHealthScreening,Allergy,Condition,Surgery,CollectandSubmitVitals,ScheduleVitalsCollection,callMembers,CompleteOnboarding,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -300,6 +300,104 @@ class ConditionSerializer(serializers.ModelSerializer):
             instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
+        
+class callMembersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = callMembers
+        fields = ['id', 'memberId', 'taskDate', 'status', 'department', 'assignedTo', 'notes']
+        
+        def create(self, validated_data):
+            return callMembers.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDate = validated_data.get('taskDate', instance.taskDate)
+            instance.status = validated_data.get('status', instance.status)
+            instance.department = validated_data.get('department', instance.department)
+            instance.assignedTo = validated_data.get('assignedTo', instance.assignedTo)
+            instance.notes = validated_data.get('notes', instance.notes)
+            instance.save()
+            return 
+        
+class CompleteOnboardingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompleteOnboarding
+        fields = ['id', 'memberId', 'taskDate', 'status', 'department', 'assignedTo', 'notes']
+        
+        def create(self, validated_data):
+            return CompleteOnboarding.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDate = validated_data.get('taskDate', instance.taskDate)
+            instance.status = validated_data.get('status', instance.status)
+            instance.department = validated_data.get('department', instance.department)
+            instance.assignedTo = validated_data.get('assignedTo', instance.assignedTo)
+            instance.notes = validated_data.get('notes', instance.notes)
+            instance.save()
+            return instance
+        
+class ScheduleVitalsCollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleVitalsCollection
+        fields = ['id', 'memberId', 'taskDate', 'status', 'department', 'assignedTo', 'notes']
+        
+        def create(self, validated_data):
+            return ScheduleVitalsCollection.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDate = validated_data.get('taskDate', instance.taskDate)
+            instance.status = validated_data.get('status', instance.status)
+            instance.department = validated_data.get('department', instance.department)
+            instance.assignedTo = validated_data.get('assignedTo', instance.assignedTo)
+            instance.notes = validated_data.get('notes', instance.notes)
+            instance.save()
+            return instance
+        
+class CollectandSubmitVitalsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CollectandSubmitVitals
+        fields = ['id', 'memberId', 'taskDate', 'status', 'department', 'assignedTo', 'notes']
+        
+        def create(self, validated_data):
+            return CollectandSubmitVitals.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDate = validated_data.get('taskDate', instance.taskDate)
+            instance.status = validated_data.get('status', instance.status)
+            instance.department = validated_data.get('department', instance.department)
+            instance.assignedTo = validated_data.get('assignedTo', instance.assignedTo)
+            instance.notes = validated_data.get('notes', instance.notes)
+            instance.save()
+            return instance
+
+class InitialConsultationDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InitialConsultationDoctor
+        fields = ['id', 'memberId', 'taskDate', 'status', 'department', 'assignedTo', 'notes']
+        
+        def create(self, validated_data):
+            return InitialConsultationDoctor.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDate = validated_data.get('taskDate', instance.taskDate)
+            instance.status = validated_data.get('status', instance.status)
+            instance.department = validated_data.get('department', instance.department)
+            instance.assignedTo = validated_data.get('assignedTo', instance.assignedTo)
+            instance.notes = validated_data.get('notes', instance.notes)
+            instance.save()
+            return instance
+        
+class InitialConsultationNutritionistSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = InitialConsultationNutritionist
+
+class InitialConsultationPsychologistSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = InitialConsultationPsychologist
+
+class InitialMentalHealthScreeningSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = InitialMentalHealthScreening
+        
 
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)

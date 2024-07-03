@@ -1,5 +1,5 @@
-from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Condition,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Dependant,Overview,Allergy,Surgery,Othernote,Condition,InitialConsultationNutritionist,InitialConsultationDoctor,InitialConsultationPsychologist,InitialMentalHealthScreening,callMembers,CollectandSubmitVitals,ScheduleVitalsCollection,CompleteOnboarding,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DependantSerializer,callMembersSerializer,CollectandSubmitVitalsSerializer,InitialConsultationDoctorSerializer,InitialConsultationNutritionistSerializer,InitialConsultationPsychologistSerializer,InitialMentalHealthScreeningSerializer,ScheduleVitalsCollectionSerializer,CompleteOnboardingSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 
 class MemberList(generics.ListCreateAPIView):
@@ -180,3 +180,74 @@ class ConditionList(generics.ListCreateAPIView):
 class ConditionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Condition.objects.all()
     serializer_class = ConditionSerializer
+
+class callMembersList(generics.ListCreateAPIView):
+    queryset = callMembers.objects.all()
+    serializer_class = callMembersSerializer
+
+class callMembersDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = callMembers.objects.all()
+    serializer_class = callMembersSerializer
+
+class CompleteOnboardingList(generics.ListCreateAPIView):
+    queryset = CompleteOnboarding.objects.all()
+    serializer_class = CompleteOnboardingSerializer
+
+class CompleteOnboardingDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CompleteOnboarding.objects.all()
+    serializer_class = CompleteOnboardingSerializer
+
+class ScheduleVitalsCollectionList(generics.ListCreateAPIView):
+    queryset = ScheduleVitalsCollection.objects.all()
+    serializer_class = ScheduleVitalsCollectionSerializer
+
+class ScheduleVitalsCollectionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ScheduleVitalsCollection.objects.all()
+    serializer_class = ScheduleVitalsCollectionSerializer
+
+class CollectandSubmitVitalsList(generics.ListCreateAPIView):
+    queryset = CollectandSubmitVitals.objects.all()
+    serializer_class = CollectandSubmitVitalsSerializer
+
+class CollectandSubmitVitalsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CollectandSubmitVitals.objects.all()
+    serializer_class = CollectandSubmitVitalsSerializer
+
+class InitialConsultationDoctorList(generics.ListCreateAPIView):
+    queryset = InitialConsultationDoctor.objects.all()
+    serializer_class = InitialConsultationDoctorSerializer
+
+class InitialConsultationDoctorDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InitialConsultationDoctor.objects.all()
+    serializer_class = InitialConsultationDoctorSerializer
+
+class InitialConsultationNutritionistList(generics.ListCreateAPIView):
+    queryset = InitialConsultationNutritionist.objects.all()
+    serializer_class = InitialConsultationNutritionistSerializer
+
+class InitialConsultationNutritionistDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InitialConsultationNutritionist.objects.all()
+    serializer_class = InitialConsultationNutritionistSerializer
+
+class InitialConsultationPsychologistList(generics.ListCreateAPIView):
+    queryset = InitialConsultationPsychologist.objects.all()
+    serializer_class = InitialConsultationPsychologistSerializer
+
+class InitialConsultationPsychologistDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InitialConsultationPsychologist.objects.all()
+    serializer_class = InitialConsultationPsychologistSerializer
+
+class InitialMentalHealthScreeningList(generics.ListCreateAPIView):
+    queryset = InitialMentalHealthScreening.objects.all()
+    serializer_class = InitialMentalHealthScreeningSerializer
+
+class InitialMentalHealthScreeningDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InitialMentalHealthScreening.objects.all()
+    serializer_class = InitialMentalHealthScreeningSerializer
+
+
+
+
+
+
+

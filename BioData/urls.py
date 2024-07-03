@@ -63,6 +63,17 @@ urlpatterns = [
     path('condition/', views.ConditionList.as_view() ),
     path('condition/<int:pk>/', views.ConditionDetail.as_view() ),
     
-]
+    path('callmembers/', views.callMembersList.as_view() ),
+    path('callmembers/<int:pk>/', views.callMembersDetail.as_view() ),
 
+    path('completeonboarding/', views.CompleteOnboardingList.as_view() ),
+    path('completeonboarding/<int:pk>/', views.CompleteOnboardingDetail.as_view() ),
+
+    path('schedulevitalscollection/', views.ScheduleVitalsCollectionList.as_view() ),
+    path('schedulevitalscollection/<int:pk>/', views.ScheduleVitalsCollectionDetail.as_view() ),
+
+    path('collectandsubmitvitals/', views.CollectandSubmitVitalsList.as_view() ),
+    path('collectandsubmitvitals/<int:pk>/', views.CollectandSubmitVitalsDetail.as_view() ),
+    
+]
 urlpatterns = format_suffix_patterns(urlpatterns)
