@@ -32,6 +32,7 @@ urlpatterns = [
 
     path('interaction/', views.InteractionList.as_view() ),
     path('interaction/<int:pk>/', views.InteractionDetail.as_view() ),
+    path('interaction/post/', views.InteractionPost.as_view() ),
 
     path('bloodpressure/', views.BloodPressureList.as_view() ),
     path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
@@ -74,6 +75,39 @@ urlpatterns = [
 
     path('collectandsubmitvitals/', views.CollectandSubmitVitalsList.as_view() ),
     path('collectandsubmitvitals/<int:pk>/', views.CollectandSubmitVitalsDetail.as_view() ),
-    
+
+    path('initialconsultationdoctor/', views.InitialConsultationDoctorList.as_view() ),
+    path('initialconsultationdoctor/<int:pk>/', views.InitialConsultationDoctorDetail.as_view() ),
+
+    path('initialconsultationnutritionist/', views.InitialConsultationNutritionistList.as_view() ),
+    path('initialconsultationnutritionist/<int:pk>/', views.InitialConsultationNutritionistDetail.as_view() ),
+
+    path('initialconsultationpsychologist/', views.InitialConsultationPsychologistList.as_view() ),
+    path('initialconsultationpsychologist/<int:pk>/', views.InitialConsultationPsychologistDetail.as_view() ),
+
+    path('initialMentalHealthAssessment/', views.InitialMentalHealthScreeningList.as_view() ),
+    path('initialMentalHealthAssessment/<int:pk>/', views.InitialMentalHealthScreeningDetail.as_view() ),
+
+    path('generatecareplan/', views.GenerateCarePlanList.as_view() ),
+    path('generatecareplan/<int:pk>/', views.GenerateCarePlanDetail.as_view() ),
+
+    path('generatelabrequest/', views.GenerateLabRequestList.as_view() ),
+    path('generatelabrequest/<int:pk>/', views.GenerateLabRequestDetail.as_view() ),
+
+    path('generateLabRequest/', views.GenerateLabRequestList.as_view() ),
+    path('generateLabRequest/<int:pk>/', views.GenerateLabRequestDetail.as_view() ),
+
+    path('scheduleannuallabtest/', views.ScheduleAnnualLabTestList.as_view() ),
+    path('scheduleannuallabtest/<int:pk>/', views.ScheduleAnnualLabTestDetail.as_view() ),
+
+    path('scheduleresultreview/', views.ScheduleResultsReviewList.as_view() ),
+    path('scheduleresultreview/<int:pk>/', views.ScheduleResultsReviewDetail.as_view() ),
+
+    path('doctorssecondconsultation/', views.DoctorsSecondConsultationList.as_view() ),
+    path('doctorssecondconsultation/<int:pk>/', views.DoctorsSecondConsultationDetail.as_view() ),
+
+    path('task/', views.TaskList.as_view() ),
+    path('task/post/', views.TaskListPost.as_view() ),
+    path('task/<int:pk>/', views.TaskDetail.as_view() ),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Member,Dependant,Overview,Allergy,InitialMentalHealthScreening,InitialConsultationDoctor,InitialConsultationPsychologist,InitialConsultationNutritionist,Surgery,Condition,callMembers,ScheduleVitalsCollection,CollectandSubmitVitals,BodyMassIndex,CompleteOnboarding,FastingBloodSugar,GlycatedHaemoglobin,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Social,Family,PulseRate,InteractionLog, BloodPressure, Temperature,Oxygen
+from .models import Member,Dependant,Overview,Allergy,GenerateCarePlan,Task,GenerateLabRequest,ScheduleAnnualLabTest,ScheduleResultsReview,DoctorsSecondConsultation,InitialMentalHealthScreening,InitialConsultationDoctor,InitialConsultationPsychologist,InitialConsultationNutritionist,Surgery,Condition,callMembers,ScheduleVitalsCollection,CollectandSubmitVitals,BodyMassIndex,CompleteOnboarding,FastingBloodSugar,GlycatedHaemoglobin,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Social,Family,PulseRate,InteractionLog, BloodPressure, Temperature,Oxygen
 # Register your models here.
 
 admin.site.register(Member)
@@ -30,5 +30,10 @@ admin.site.register(InitialConsultationDoctor)
 admin.site.register(InitialConsultationNutritionist)
 admin.site.register(InitialConsultationPsychologist)
 admin.site.register(InitialMentalHealthScreening)
-
+admin.site.register(DoctorsSecondConsultation)
+admin.site.register(GenerateLabRequest)
+admin.site.register(GenerateCarePlan)
+admin.site.register(ScheduleAnnualLabTest)
+admin.site.register(ScheduleResultsReview)
+admin.site.register(Task)
 

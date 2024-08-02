@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Dependant,Overview,InitialConsultationDoctor,InitialConsultationNutritionist,InitialConsultationPsychologist,InitialMentalHealthScreening,Allergy,Condition,Surgery,CollectandSubmitVitals,ScheduleVitalsCollection,callMembers,CompleteOnboarding,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Task,Dependant,Overview,GenerateCarePlan,GenerateLabRequest,ScheduleAnnualLabTest,ScheduleResultsReview,DoctorsSecondConsultation,InitialConsultationDoctor,InitialConsultationNutritionist,InitialConsultationPsychologist,InitialMentalHealthScreening,Allergy,Condition,Surgery,CollectandSubmitVitals,ScheduleVitalsCollection,callMembers,CompleteOnboarding,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -136,10 +136,10 @@ class SocialSerializer (serializers.ModelSerializer):
 class InteractionSerializer(serializers.ModelSerializer):
     class Meta:
         model = InteractionLog
-        fields = '__all__'
+        fields = ['id','memberId','channel','updatedBy','channelDirection','interactionDetails']
 
     def create(self,validated_data):
-        return InteractionLog.objects.all(**validated_data)
+        return InteractionLog.objects.create(**validated_data)
     
     def update(self,instance,validated_data):
         instance.channel = validated_data.get("channel",instance.channel)
@@ -397,7 +397,44 @@ class InitialConsultationPsychologistSerializer(serializers.ModelSerializer):
 class InitialMentalHealthScreeningSerializer(serializers.ModelSerializer):
     class Meta(InitialConsultationDoctorSerializer.Meta):
         model = InitialMentalHealthScreening
+
+class GenerateCarePlanSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = GenerateCarePlan
+
+class GenerateLabRequestSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = GenerateLabRequest
+
+class ScheduleAnnualLabTestSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = ScheduleAnnualLabTest
+
+class ScheduleResultsReviewSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = ScheduleResultsReview
+
+class DoctorsSecondConsultationSerializer(serializers.ModelSerializer):
+    class Meta(InitialConsultationDoctorSerializer.Meta):
+        model = DoctorsSecondConsultation
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['id','memberId', 'taskName', 'taskDueDate', 'taskStatus', 'taskDepartment', 'taskAssignedTo','task']
         
+        def create(self, validated_data):
+            return Task.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.taskDueDate = validated_data.get('taskDueDate', instance.taskDueDate)
+            instance.taskStatus = validated_data.get('taskStatus', instance.taskStatus)
+            instance.taskDepartment = validated_data.get('taskDepartment', instance.taskDepartment)
+            instance.taskAssignedTo = validated_data.get('taskAssignedTo', instance.taskAssignedTo)
+            instance.taskName = validated_data.get('taskName',instance.taskName)
+            instance.task = validated_data.get('task', instance.task)
+            instance.save()
+            return instance
 
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)

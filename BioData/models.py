@@ -222,8 +222,36 @@ class InitialMentalHealthScreening(memberTaskBase):
 class InitialConsultationPsychologist(memberTaskBase):
     pass
     
-    
-    
+class GenerateCarePlan(memberTaskBase):
+    pass
+
+class GenerateLabRequest(memberTaskBase):
+    pass
+
+class ScheduleAnnualLabTest(memberTaskBase):
+    pass
+
+class AddLabResults(memberTaskBase):
+    pass
+
+class ScheduleResultsReview(memberTaskBase):
+    pass
+
+class DoctorsSecondConsultation(memberTaskBase):
+    pass
+
+#Tasks
+class Task(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    taskName = models.CharField(max_length=50)
+    task = models.TextField()
+    taskDueDate = models.DateField(null=True,blank=True)
+    taskStatus = models.CharField(max_length=20)
+    taskAssignedTo = models.CharField(max_length=50)
+    taskDepartment = models.CharField(max_length=50)
+    def __str__(self):
+        return self.taskName
     
     
     
