@@ -136,7 +136,7 @@ class SocialSerializer (serializers.ModelSerializer):
 class InteractionSerializer(serializers.ModelSerializer):
     class Meta:
         model = InteractionLog
-        fields = ['id','memberId','channel','updatedBy','channelDirection','interactionDetails']
+        fields = ['id','created','memberId','channel','updatedBy','channelDirection','interactionDetails']
 
     def create(self,validated_data):
         return InteractionLog.objects.create(**validated_data)
