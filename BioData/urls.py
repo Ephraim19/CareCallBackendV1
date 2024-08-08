@@ -36,6 +36,7 @@ urlpatterns = [
 
     path('bloodpressure/', views.BloodPressureList.as_view() ),
     path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
+    path('bloodpressure/post/', views.BloodPressurePost.as_view() ),
 
     path('temperature/', views.TemperatureList.as_view() ),
     path('temperature/<int:pk>/', views.TemperatureDetail.as_view() ),
@@ -55,7 +56,7 @@ urlpatterns = [
     path ('fastingbloodsugar/', views.FastingBloodSugarList.as_view() ),
     path ('fastingbloodsugar/<int:pk>/', views.FastingBloodSugarDetail.as_view() ),
 
-    path('bodymassindex/', views.BodyMassIndexList.as_view() ),
+    path('bodymassindex/post/', views.BodyMassIndexList.as_view() ),
     path('bodymassindex/<int:pk>/', views.BodyMassIndexDetail.as_view() ),
 
     path('glycatedhaemoglobin/', views.GlycatedHemoglobinList.as_view() ),
@@ -63,48 +64,9 @@ urlpatterns = [
 
     path('condition/', views.ConditionList.as_view() ),
     path('condition/<int:pk>/', views.ConditionDetail.as_view() ),
-    
-    path('callmembers/', views.callMembersList.as_view() ),
-    path('callmembers/<int:pk>/', views.callMembersDetail.as_view() ),
 
-    path('completeonboarding/', views.CompleteOnboardingList.as_view() ),
-    path('completeonboarding/<int:pk>/', views.CompleteOnboardingDetail.as_view() ),
-
-    path('schedulevitalscollection/', views.ScheduleVitalsCollectionList.as_view() ),
-    path('schedulevitalscollection/<int:pk>/', views.ScheduleVitalsCollectionDetail.as_view() ),
-
-    path('collectandsubmitvitals/', views.CollectandSubmitVitalsList.as_view() ),
-    path('collectandsubmitvitals/<int:pk>/', views.CollectandSubmitVitalsDetail.as_view() ),
-
-    path('initialconsultationdoctor/', views.InitialConsultationDoctorList.as_view() ),
-    path('initialconsultationdoctor/<int:pk>/', views.InitialConsultationDoctorDetail.as_view() ),
-
-    path('initialconsultationnutritionist/', views.InitialConsultationNutritionistList.as_view() ),
-    path('initialconsultationnutritionist/<int:pk>/', views.InitialConsultationNutritionistDetail.as_view() ),
-
-    path('initialconsultationpsychologist/', views.InitialConsultationPsychologistList.as_view() ),
-    path('initialconsultationpsychologist/<int:pk>/', views.InitialConsultationPsychologistDetail.as_view() ),
-
-    path('initialMentalHealthAssessment/', views.InitialMentalHealthScreeningList.as_view() ),
-    path('initialMentalHealthAssessment/<int:pk>/', views.InitialMentalHealthScreeningDetail.as_view() ),
-
-    path('generatecareplan/', views.GenerateCarePlanList.as_view() ),
-    path('generatecareplan/<int:pk>/', views.GenerateCarePlanDetail.as_view() ),
-
-    path('generatelabrequest/', views.GenerateLabRequestList.as_view() ),
-    path('generatelabrequest/<int:pk>/', views.GenerateLabRequestDetail.as_view() ),
-
-    path('generateLabRequest/', views.GenerateLabRequestList.as_view() ),
-    path('generateLabRequest/<int:pk>/', views.GenerateLabRequestDetail.as_view() ),
-
-    path('scheduleannuallabtest/', views.ScheduleAnnualLabTestList.as_view() ),
-    path('scheduleannuallabtest/<int:pk>/', views.ScheduleAnnualLabTestDetail.as_view() ),
-
-    path('scheduleresultreview/', views.ScheduleResultsReviewList.as_view() ),
-    path('scheduleresultreview/<int:pk>/', views.ScheduleResultsReviewDetail.as_view() ),
-
-    path('doctorssecondconsultation/', views.DoctorsSecondConsultationList.as_view() ),
-    path('doctorssecondconsultation/<int:pk>/', views.DoctorsSecondConsultationDetail.as_view() ),
+    path('journey/', views.MemberJourneyList.as_view() ),
+    path('journey/<int:pk>/', views.MemberJourneyDetail.as_view() ),
 
     path('task/', views.TaskList.as_view() ),
     path('task/post/', views.TaskListPost.as_view() ),

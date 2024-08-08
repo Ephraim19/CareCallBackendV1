@@ -110,7 +110,7 @@ class BloodPressure(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='bloodpressure', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=50)
     systolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     diastolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
 
@@ -168,7 +168,7 @@ class BodyMassIndex(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='bmi', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=50)
     height = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 
@@ -182,63 +182,63 @@ class memberTaskBase(models.Model):
     department = models.CharField(max_length=20,null=True,blank=True)
     assignedTo = models.CharField(max_length=50,null=True,blank=True)
     notes = models.TextField(blank=True,null=True)
-    
-    class Meta:
-        abstract = True
+    task = models.TextField()
+    notesDate = models.CharField(max_length=50,null=True,blank=True)
+    notesBy = models.EmailField()
 
     def __str__(self):
         return self.memberId.memberName
 
-class callMembers(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    memberId = models.ForeignKey(Member, related_name='call', on_delete=models.CASCADE)
-    taskDate = models.DateField()
-    status = models.CharField(max_length=20,default='Not started')
-    department = models.CharField(max_length=20,default='Care Manager')
-    assignedTo = models.CharField(max_length=50,default='')
-    notes = models.TextField(blank=True,null=True)
+# class callMembers(models.Model):
+#     created = models.DateTimeField(auto_now_add=True)
+#     memberId = models.ForeignKey(Member, related_name='call', on_delete=models.CASCADE)
+#     taskDate = models.DateField()
+#     status = models.CharField(max_length=20,default='Not started')
+#     department = models.CharField(max_length=20,default='Care Manager')
+#     assignedTo = models.CharField(max_length=50,default='')
+#     notes = models.TextField(blank=True,null=True)
 
-    def __str__(self):
-        return self.memberId.memberName
+#     def __str__(self):
+#         return self.memberId.memberName
     
-class CompleteOnboarding(memberTaskBase):
-    pass
+# class CompleteOnboarding(memberTaskBase):
+#     pass
 
-class ScheduleVitalsCollection(memberTaskBase):
-    pass
+# class ScheduleVitalsCollection(memberTaskBase):
+#     pass
 
-class CollectandSubmitVitals(memberTaskBase):
-    pass
+# class CollectandSubmitVitals(memberTaskBase):
+#     pass
 
-class InitialConsultationDoctor(memberTaskBase):
-    pass
+# class InitialConsultationDoctor(memberTaskBase):
+#     pass
 
-class InitialConsultationNutritionist(memberTaskBase):
-    pass
+# class InitialConsultationNutritionist(memberTaskBase):
+#     pass
 
-class InitialMentalHealthScreening(memberTaskBase):
-    pass
+# class InitialMentalHealthScreening(memberTaskBase):
+#     pass
 
-class InitialConsultationPsychologist(memberTaskBase):
-    pass
+# class InitialConsultationPsychologist(memberTaskBase):
+#     pass
     
-class GenerateCarePlan(memberTaskBase):
-    pass
+# class GenerateCarePlan(memberTaskBase):
+#     pass
 
-class GenerateLabRequest(memberTaskBase):
-    pass
+# class GenerateLabRequest(memberTaskBase):
+#     pass
 
-class ScheduleAnnualLabTest(memberTaskBase):
-    pass
+# class ScheduleAnnualLabTest(memberTaskBase):
+#     pass
 
-class AddLabResults(memberTaskBase):
-    pass
+# class AddLabResults(memberTaskBase):
+#     pass
 
-class ScheduleResultsReview(memberTaskBase):
-    pass
+# class ScheduleResultsReview(memberTaskBase):
+#     pass
 
-class DoctorsSecondConsultation(memberTaskBase):
-    pass
+# class DoctorsSecondConsultation(memberTaskBase):
+#     pass
 
 #Tasks
 class Task(models.Model):
@@ -246,7 +246,7 @@ class Task(models.Model):
     memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
     taskName = models.CharField(max_length=50)
     task = models.TextField()
-    taskDueDate = models.DateField(null=True,blank=True)
+    taskDueDate = models.CharField(max_length=50)
     taskStatus = models.CharField(max_length=20)
     taskAssignedTo = models.CharField(max_length=50)
     taskDepartment = models.CharField(max_length=50)

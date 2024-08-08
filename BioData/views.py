@@ -1,5 +1,5 @@
-from .models import Member,Task,Dependant,Overview,Allergy,Surgery,Othernote,GenerateCarePlan,GenerateLabRequest,ScheduleAnnualLabTest,ScheduleResultsReview,DoctorsSecondConsultation,Condition,InitialConsultationNutritionist,InitialConsultationDoctor,InitialConsultationPsychologist,InitialMentalHealthScreening,callMembers,CollectandSubmitVitals,ScheduleVitalsCollection,CompleteOnboarding,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,TaskSerializer,DependantSerializer,GenerateCarePlanSerializer,GenerateLabRequestSerializer,ScheduleAnnualLabTestSerializer,ScheduleResultsReviewSerializer,DoctorsSecondConsultationSerializer,callMembersSerializer,CollectandSubmitVitalsSerializer,InitialConsultationDoctorSerializer,InitialConsultationNutritionistSerializer,InitialConsultationPsychologistSerializer,InitialMentalHealthScreeningSerializer,ScheduleVitalsCollectionSerializer,CompleteOnboardingSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Allergy,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,TaskSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 
@@ -119,7 +119,7 @@ class InteractionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = InteractionSerializer
 
 #BLOOD PRESSURE
-class BloodPressureList(generics.ListCreateAPIView):
+class BloodPressureList(generics.ListAPIView):
     serializer_class = BloodPressureSerializer
 
     def get_queryset(self):
@@ -138,6 +138,9 @@ class BloodPressureList(generics.ListCreateAPIView):
         # You can add additional logic here if needed
         serializer.save(memberId=member_id)
     
+class BloodPressurePost(generics.CreateAPIView):
+    queryset = BloodPressure.objects.all()
+    serializer_class = BloodPressureSerializer
 
 class BloodPressureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = BloodPressure.objects.all()
@@ -215,111 +218,24 @@ class ConditionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Condition.objects.all()
     serializer_class = ConditionSerializer
 
-class callMembersList(generics.ListCreateAPIView):
-    queryset = callMembers.objects.all()
-    serializer_class = callMembersSerializer
+#MEMBER JOURNEY
+class MemberJourneyList(generics.ListAPIView):
+    serializer_class = MemberJourneySerializer
 
-class callMembersDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = callMembers.objects.all()
-    serializer_class = callMembersSerializer
-
-class CompleteOnboardingList(generics.ListCreateAPIView):
-    queryset = CompleteOnboarding.objects.all()
-    serializer_class = CompleteOnboardingSerializer
-
-class CompleteOnboardingDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CompleteOnboarding.objects.all()
-    serializer_class = CompleteOnboardingSerializer
-
-class ScheduleVitalsCollectionList(generics.ListCreateAPIView):
-    queryset = ScheduleVitalsCollection.objects.all()
-    serializer_class = ScheduleVitalsCollectionSerializer
-
-class ScheduleVitalsCollectionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ScheduleVitalsCollection.objects.all()
-    serializer_class = ScheduleVitalsCollectionSerializer
-
-class CollectandSubmitVitalsList(generics.ListCreateAPIView):
-    queryset = CollectandSubmitVitals.objects.all()
-    serializer_class = CollectandSubmitVitalsSerializer
-
-class CollectandSubmitVitalsDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CollectandSubmitVitals.objects.all()
-    serializer_class = CollectandSubmitVitalsSerializer
-
-class InitialConsultationDoctorList(generics.ListCreateAPIView):
-    queryset = InitialConsultationDoctor.objects.all()
-    serializer_class = InitialConsultationDoctorSerializer
-
-class InitialConsultationDoctorDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = InitialConsultationDoctor.objects.all()
-    serializer_class = InitialConsultationDoctorSerializer
-
-class InitialConsultationNutritionistList(generics.ListCreateAPIView):
-    queryset = InitialConsultationNutritionist.objects.all()
-    serializer_class = InitialConsultationNutritionistSerializer
-
-class InitialConsultationNutritionistDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = InitialConsultationNutritionist.objects.all()
-    serializer_class = InitialConsultationNutritionistSerializer
-
-class InitialConsultationPsychologistList(generics.ListCreateAPIView):
-    queryset = InitialConsultationPsychologist.objects.all()
-    serializer_class = InitialConsultationPsychologistSerializer
-
-class InitialConsultationPsychologistDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = InitialConsultationPsychologist.objects.all()
-    serializer_class = InitialConsultationPsychologistSerializer
-
-class InitialMentalHealthScreeningList(generics.ListCreateAPIView):
-    queryset = InitialMentalHealthScreening.objects.all()
-    serializer_class = InitialMentalHealthScreeningSerializer
-
-class InitialMentalHealthScreeningDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = InitialMentalHealthScreening.objects.all()
-    serializer_class = InitialMentalHealthScreeningSerializer
-
-class GenerateCarePlanList(generics.ListCreateAPIView):
-    queryset = GenerateCarePlan.objects.all()
-    serializer_class = GenerateCarePlanSerializer
-
-class GenerateCarePlanDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GenerateCarePlan.objects.all()
-    serializer_class = GenerateCarePlanSerializer
-
-class GenerateLabRequestList(generics.ListCreateAPIView):
-    queryset = GenerateLabRequest.objects.all()
-    serializer_class = GenerateLabRequestSerializer
-
-class GenerateLabRequestDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GenerateLabRequest.objects.all()
-    serializer_class = GenerateLabRequestSerializer
-
-class ScheduleAnnualLabTestList(generics.ListCreateAPIView):
-    queryset = ScheduleAnnualLabTest.objects.all()
-    serializer_class = ScheduleAnnualLabTestSerializer
-
-class ScheduleAnnualLabTestDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ScheduleAnnualLabTest.objects.all()
-    serializer_class = ScheduleAnnualLabTestSerializer
-
-class ScheduleResultsReviewList(generics.ListCreateAPIView):
-    queryset = ScheduleResultsReview.objects.all()
-    serializer_class = ScheduleResultsReviewSerializer
-
-class ScheduleResultsReviewDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ScheduleResultsReview.objects.all()
-    serializer_class = ScheduleResultsReviewSerializer
-
-class DoctorsSecondConsultationList(generics.ListCreateAPIView):
-
-    queryset = DoctorsSecondConsultation.objects.all()
-    serializer_class = DoctorsSecondConsultationSerializer
-
-class DoctorsSecondConsultationDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DoctorsSecondConsultation.objects.all()
-    serializer_class = DoctorsSecondConsultationSerializer
-
+    def get_queryset(self):
+        """
+        This view returns a list of all the member journey
+        for the memberId passed in the request.
+        """
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return memberTaskBase.objects.filter(memberId=member_id)
+        else:
+            return memberTaskBase.objects.none()
+        
+class MemberJourneyDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = memberTaskBase.objects.all()
+    serializer_class = MemberJourneySerializer
 
 #TASKS
 class TaskList(generics.ListAPIView): 
@@ -335,6 +251,7 @@ class TaskList(generics.ListAPIView):
             return Task.objects.none()  
 
 class TaskListPost(generics.CreateAPIView):
+    
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
