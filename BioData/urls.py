@@ -71,5 +71,7 @@ urlpatterns = [
     path('task/', views.TaskList.as_view() ),
     path('task/post/', views.TaskListPost.as_view() ),
     path('task/<int:pk>/', views.TaskDetail.as_view() ),
+
+    path('new/', views.NewMemberAdd.as_view() ),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

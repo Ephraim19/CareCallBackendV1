@@ -1,7 +1,8 @@
 from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Allergy,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,TaskSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .serializers import MemberSerializer,NewMemberSerializer,TaskSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
+from datetime import datetime
 
 class MemberList(generics.ListCreateAPIView):
     
@@ -9,12 +10,26 @@ class MemberList(generics.ListCreateAPIView):
     serializer_class = MemberSerializer
     
     
-    
 class MemberDetail(generics.RetrieveUpdateDestroyAPIView):
     
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
-    
+
+class NewMemberAdd(generics.CreateAPIView):
+    serializer_class = NewMemberSerializer
+
+    def perform_create(self, serializer):
+
+        memberDOB = self.request.data.get('memberDOB', None)
+        memberName = self.request.data.get('memberName', None)
+        memberFacility = self.request.data.get('memberFacility', None)
+        memberPhone = self.request.data.get('memberPhone', None)
+        memberGender = self.request.data.get('memberGender', None)
+        memerEmail = self.request.data.get('memerEmail', None)
+        
+        serializer.save(memberDOB=memberDOB, memberName=memberName, memberFacility=memberFacility, memberPhone=memberPhone, memberGender=memberGender,memerEmail=memerEmail)
+
+
 class DependantList(generics.ListCreateAPIView):
     
     queryset = Dependant.objects.all()
