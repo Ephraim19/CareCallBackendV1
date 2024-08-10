@@ -2,7 +2,7 @@ from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Alle
 from .serializers import MemberSerializer,NewMemberSerializer,TaskSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class MemberList(generics.ListCreateAPIView):
     
@@ -145,17 +145,54 @@ class BloodPressureList(generics.ListAPIView):
         else:
             return BloodPressure.objects.none() 
     
-    def perform_create(self, serializer):
-        member_id = self.request.data.get('memberId',None)
-        if not member_id:
-            raise ValidationError('memberId field is required.')
 
-        # You can add additional logic here if needed
-        serializer.save(memberId=member_id)
     
 class BloodPressurePost(generics.CreateAPIView):
-    queryset = BloodPressure.objects.all()
-    serializer_class = BloodPressureSerializer
+    serializer_class =  BloodPressureSerializer
+
+    def perform_create(self,serializer):
+        clinical_info = [130,80,120,60]
+        member_id = self.request.data.get('memberId',None)
+        systolic = self.request.data.get('systolic',None)
+        diastolic = self.request.data.get('diastolic',None)
+        readingDate = self.request.data.get('readingDate',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        
+        if int(systolic) > clinical_info[0] or  int(diastolic) > clinical_info[2]:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo='test@g.com'  ,
+                task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
+                taskName = "Hypertension Follow up"
+            )
+            
+        
+        if int(systolic) < clinical_info[1] or  int(diastolic) < clinical_info[3]:
+
+            Task.objects.create(
+                memberId=member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo='test@g.com'  ,
+                task = 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
+                taskName = "Hypertension Follow up"
+            )
+        #Save the task
+
+
+        serializer.save()
+
+
 
 class BloodPressureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = BloodPressure.objects.all()
@@ -217,9 +254,10 @@ class GlycatedHemoglobinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = GlycatedHaemoglobin.objects.all()
     serializer_class = GlycateHaemoglobinSerializer
 
-class BodyMassIndexList(generics.ListCreateAPIView):
+class BodyMassIndexList(generics.ListAPIView):
     queryset = BodyMassIndex.objects.all()
     serializer_class = BodyMassIndexSerializer
+
 
 class BodyMassIndexDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = BodyMassIndex.objects.all()
@@ -261,7 +299,19 @@ class TaskList(generics.ListAPIView):
         member_id = self.request.query_params.get('memberId', None)
 
         if member_id is not None:
-            return Task.objects.filter(memberId=member_id)
+            mbrTasks = Task.objects.filter(memberId=member_id)
+
+            tasks_with_dates = []
+            for task in mbrTasks:
+                date_string = task.taskDueDate
+                date_object = datetime.strptime(date_string, "%a %b %d %Y")
+                tasks_with_dates.append((task, date_object,task.taskStatus))
+            
+            tasks_with_dates_sorted = sorted( tasks_with_dates,  key=lambda x: (x[2] in ["complete", "cancelled"], x[1]))
+            tasks_sorted = [task for task, date, status in tasks_with_dates_sorted]
+            
+            return tasks_sorted
+
         else:
             return Task.objects.none()  
 

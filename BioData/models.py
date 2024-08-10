@@ -188,56 +188,6 @@ class memberTaskBase(models.Model):
     def __str__(self):
         return self.memberId.memberName
 
-# class callMembers(models.Model):
-#     created = models.DateTimeField(auto_now_add=True)
-#     memberId = models.ForeignKey(Member, related_name='call', on_delete=models.CASCADE)
-#     taskDate = models.DateField()
-#     status = models.CharField(max_length=20,default='Not started')
-#     department = models.CharField(max_length=20,default='Care Manager')
-#     assignedTo = models.CharField(max_length=50,default='')
-#     notes = models.TextField(blank=True,null=True)
-
-#     def __str__(self):
-#         return self.memberId.memberName
-    
-# class CompleteOnboarding(memberTaskBase):
-#     pass
-
-# class ScheduleVitalsCollection(memberTaskBase):
-#     pass
-
-# class CollectandSubmitVitals(memberTaskBase):
-#     pass
-
-# class InitialConsultationDoctor(memberTaskBase):
-#     pass
-
-# class InitialConsultationNutritionist(memberTaskBase):
-#     pass
-
-# class InitialMentalHealthScreening(memberTaskBase):
-#     pass
-
-# class InitialConsultationPsychologist(memberTaskBase):
-#     pass
-    
-# class GenerateCarePlan(memberTaskBase):
-#     pass
-
-# class GenerateLabRequest(memberTaskBase):
-#     pass
-
-# class ScheduleAnnualLabTest(memberTaskBase):
-#     pass
-
-# class AddLabResults(memberTaskBase):
-#     pass
-
-# class ScheduleResultsReview(memberTaskBase):
-#     pass
-
-# class DoctorsSecondConsultation(memberTaskBase):
-#     pass
 
 #Tasks
 class Task(models.Model):
