@@ -190,7 +190,6 @@ class BloodPressurePost(generics.CreateAPIView):
                 task = 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
                 taskName = "Hypertension Follow up"
             )
-        #Save the task
 
         serializer.save(interpretation = interpretation)
 
@@ -274,9 +273,65 @@ class TemperatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Temperature.objects.all()
     serializer_class = TemperatureSerializer
 
-class OxygenList(generics.ListCreateAPIView):
-    queryset = Oxygen.objects.all()
+#Oxygen Saturation
+class OxygenList(generics.ListAPIView):
     serializer_class = OxygenSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Oxygen.objects.filter(memberId=member_id)
+        else:
+            return Oxygen.objects.none() 
+    
+
+    
+class OxygenPost(generics.CreateAPIView):
+    serializer_class =  OxygenSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        oxygen = self.request.data.get('oxygen',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        
+        if float(oxygen) < 90.0:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Hypoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
+                taskName = "Hypoxemia Follow up"
+            )
+            interpretation = 'Hypoxemia'
+        elif float(oxygen) > 100:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Hyperoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
+                taskName = "Hyperoxemia Follow up"
+            )
+            interpretation = 'Hyperoxemia'
+
+        else:
+            interpretation = 'Normal'            
+        
+
+        serializer.save(interpretation = interpretation)
 
 class OxygenDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Oxygen.objects.all()
