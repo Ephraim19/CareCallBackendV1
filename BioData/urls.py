@@ -40,6 +40,7 @@ urlpatterns = [
 
     path('temperature/', views.TemperatureList.as_view() ),
     path('temperature/<int:pk>/', views.TemperatureDetail.as_view() ),
+    path('temperature/post/', views.TemperaturePost.as_view() ),
 
     path('oxygensaturation/', views.OxygenList.as_view() ),
     path('oxygensaturation/<int:pk>/', views.OxygenDetail.as_view() ),

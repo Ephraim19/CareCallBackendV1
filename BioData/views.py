@@ -156,6 +156,7 @@ class BloodPressurePost(generics.CreateAPIView):
         systolic = self.request.data.get('systolic',None)
         diastolic = self.request.data.get('diastolic',None)
         readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
 
         #get member instace
         member = Member.objects.get(id=member_id)
@@ -170,11 +171,13 @@ class BloodPressurePost(generics.CreateAPIView):
                 taskDueDate=date_string,
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
-                taskAssignedTo='test@g.com'  ,
+                taskAssignedTo=updatedBy  ,
                 task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
                 taskName = "Hypertension Follow up"
             )
-            
+            interpretation = 'Hypertension'
+        else:
+            interpretation = 'Normal'            
         
         if int(systolic) < clinical_info[1] or  int(diastolic) < clinical_info[3]:
 
@@ -183,14 +186,13 @@ class BloodPressurePost(generics.CreateAPIView):
                 taskDueDate=date_string,
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
-                taskAssignedTo='test@g.com'  ,
+                taskAssignedTo=updatedBy  ,
                 task = 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
                 taskName = "Hypertension Follow up"
             )
         #Save the task
 
-
-        serializer.save()
+        serializer.save(interpretation = interpretation)
 
 
 
@@ -198,9 +200,75 @@ class BloodPressureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = BloodPressure.objects.all()
     serializer_class = BloodPressureSerializer
 
-class TemperatureList(generics.ListCreateAPIView):
-    queryset = Temperature.objects.all()
+
+#TEMPERATURE
+class TemperatureList(generics.ListAPIView):
     serializer_class = TemperatureSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Temperature.objects.filter(memberId=member_id)
+        else:
+            return Temperature.objects.none() 
+        
+class TemperaturePost(generics.CreateAPIView):
+    serializer_class =  TemperatureSerializer
+
+    def perform_create(self,serializer):
+        clinical_info = [130,80,120,60]
+        member_id = self.request.data.get('memberId',None)
+        temperature = self.request.data.get('temperature',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+
+        #Save the task
+        if float(temperature) > 38.0 and float(temperature) < 41.5:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Fever for member temperature reading on' + ' ' + readingDate ,
+                taskName = " Fever follow up"
+            )
+            interpretation = 'Fever'
+        elif float(temperature) > 41.5:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Hyperpyrexia for member temperature reading on' + ' ' + readingDate ,
+                taskName = " Hyperpyrexia follow up"
+            )
+            interpretation = 'Hyperpyrexia'
+
+        elif float(temperature) < 35.0:
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Hypothermia for member temperature reading on' + ' ' + readingDate ,
+                taskName = " Hypothermia follow up"
+            )
+            interpretation = 'Hypothermia'
+        else:
+            interpretation = 'Normal'       
+
+        serializer.save(interpretation = interpretation)
 
 class TemperatureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Temperature.objects.all()

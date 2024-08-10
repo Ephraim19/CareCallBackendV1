@@ -112,13 +112,16 @@ class BloodPressure(models.Model):
     readingDate = models.CharField(max_length=50)
     systolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     diastolic = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
 
 class Temperature(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='temperature', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=50)
     temperature = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
 
     
 class Oxygen(models.Model):
