@@ -43,14 +43,16 @@ urlpatterns = [
     path('temperature/post/', views.TemperaturePost.as_view() ),
 
     path('oxygen/', views.OxygenList.as_view() ),
-    path('oxygen/<int:pk>/', views.OxygenDetail.as_view() ),
+    path('oxygen/<int:pk>/', views.OxygenDetail.as_view()),
     path('oxygen/post/', views.OxygenPost.as_view() ),
 
     path('pulse/', views.PulseList.as_view() ),
     path('pulse/<int:pk>/', views.PulseDetail.as_view() ),
+    path('pulse/post/', views.PulsePost.as_view() ),
 
-    path('respiratoryrate/', views.RespiratoryRateList.as_view() ),
-    path('respiratoryrate/<int:pk>/', views.RespiratoryRateDetail.as_view() ),
+    path('respiratory/', views.RespiratoryRateList.as_view() ),
+    path('respiratory/<int:pk>/', views.RespiratoryRateDetail.as_view() ),
+    path('respiratory/post/', views.RespiratoryRatePost.as_view()),
 
     path('randombloodsugar/', views.RandomBloodSugarList.as_view() ),
     path('randombloodsugar/<int:pk>/', views.RandomBloodSugarDetail.as_view() ),

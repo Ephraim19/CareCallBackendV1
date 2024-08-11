@@ -138,15 +138,19 @@ class PulseRate(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='pulse', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=100)
     pulse = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
     
 class RespiratoryRate(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='respiratory', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=100)
     respiratory = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
     
 class RandomBloodSugar(models.Model):
     created = models.DateTimeField(auto_now_add=True)

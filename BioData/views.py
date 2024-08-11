@@ -337,17 +337,117 @@ class OxygenDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Oxygen.objects.all()
     serializer_class = OxygenSerializer
 
-class PulseList(generics.ListCreateAPIView):
-    queryset = PulseRate.objects.all()
+#Pulse Rate
+class PulseList(generics.ListAPIView):
     serializer_class = PulseSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return PulseRate.objects.filter(memberId=member_id)
+        else:
+            return PulseRate.objects.none() 
+    
+
+    
+class PulsePost(generics.CreateAPIView):
+    serializer_class =  PulseSerializer
+
+    def perform_create(self,serializer):
+        # clinical_info = [130,80,120,60]
+        # member_id = self.request.data.get('memberId',None)
+        # pulse = self.request.data.get('pulse',None)
+        # readingDate = self.request.data.get('readingDate',None)
+        # updatedBy = self.request.data.get('updatedBy',None)
+
+        # #get member instace
+        # member = Member.objects.get(id=member_id)
+        # now = datetime.now().date() + timedelta(days=1)
+        # date_string = now.strftime("%a %b %d %Y")
+        
+        
+        # if int(systolic) > clinical_info[0] or  int(diastolic) > clinical_info[2]:
+
+        #     Task.objects.create(
+        #         memberId= member,
+        #         taskDueDate=date_string,
+        #         taskStatus='Not started',
+        #         taskDepartment='Clinical',  
+        #         taskAssignedTo=updatedBy  ,
+        #         task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
+        #         taskName = "Hypertension Follow up"
+        #     )
+        #     interpretation = 'Hypertension'
+        # else:
+        #     interpretation = 'Normal'            
+
+
+        serializer.save(interpretation = 'Normal')
 
 class PulseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PulseRate.objects.all()
     serializer_class = PulseSerializer
 
-class RespiratoryRateList(generics.ListCreateAPIView):
-    queryset = RespiratoryRate.objects.all()
+#RESPIRATORY RATE
+class RespiratoryRateList(generics.ListAPIView):
     serializer_class = RespiratorySerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return RespiratoryRate.objects.filter(memberId=member_id)
+        else:
+            return RespiratoryRate.objects.none() 
+    
+
+    
+class RespiratoryRatePost(generics.CreateAPIView):
+    serializer_class =  RespiratorySerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        respiratory =  self.request.data.get('respiratory',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        
+        if int(respiratory) < 12:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Bradypnea for member respiratory rate reading on' + ' ' + readingDate ,
+                taskName = "Hypoxemia Follow up"
+            )
+            interpretation = 'Bradypnea'
+        elif int(respiratory) > 20:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Tachypnea for member respiratory rate reading on' + ' ' + readingDate ,
+                taskName = "Hyperoxemia Follow up"
+            )
+            interpretation = 'Tachypnea'
+
+        else:
+            interpretation = 'Normal'            
+        
+
+        serializer.save(interpretation = interpretation)
 
 class RespiratoryRateDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RespiratoryRate.objects.all()
