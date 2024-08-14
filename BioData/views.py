@@ -240,7 +240,7 @@ class TemperaturePost(generics.CreateAPIView):
                 taskName = " Fever follow up"
             )
             interpretation = 'Fever'
-        elif float(temperature) > 41.5:
+        elif float(temperature) >= 41.5:
 
             Task.objects.create(
                 memberId= member,
@@ -826,7 +826,7 @@ class TaskList(generics.ListAPIView):
             return tasks_sorted
 
         else:
-            return Task.objects.none()  
+            return Task.objects.all()  
 
 class TaskListPost(generics.CreateAPIView):
     

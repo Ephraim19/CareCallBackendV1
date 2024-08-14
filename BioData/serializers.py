@@ -373,17 +373,7 @@ class MemberSerializer (serializers.ModelSerializer):
     othernote = OthernoteSerializer(many=True, read_only=True)
     admission = AdmissionSerializer(many=True, read_only=True)
     family = FamilySerializer(many=True, read_only=True)
-    social = SocialSerializer(many=True, read_only=True)
-    interactionlog = InteractionSerializer(many=True, read_only=True)
-    bloodpressure = BloodPressureSerializer(many=True, read_only=True)
-    temperature = TemperatureSerializer(many=True, read_only=True)
-    oxygen = OxygenSerializer(many=True, read_only=True)
-    pulse = PulseSerializer(many=True, read_only=True)
-    respiratory = RespiratorySerializer(many=True, read_only=True)
-    rbs = RandomBloodSugarSerializer(many=True, read_only=True)
-    fbs = FastingBloodSugarSerializer(many=True, read_only=True)
-    hba1c = GlycateHaemoglobinSerializer(many=True, read_only=True)
-    bmi = BodyMassIndexSerializer(many=True, read_only=True)
+    social = SocialSerializer(many=True, read_only=True) 
     condition = ConditionSerializer(many=True, read_only=True)
 
     
@@ -394,8 +384,8 @@ class MemberSerializer (serializers.ModelSerializer):
                   'memberCounty', 'memberTown', 'memberDelivery', 'memberProgram', 'memberStatus',
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
                  'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
-                  'dependants','overview','allergy','surgery','othernote','admission','family','social','interactionlog',
-                  'bloodpressure','temperature','oxygen','pulse','respiratory','rbs','fbs','hba1c','bmi','condition'
+                  'dependants','overview','allergy','surgery','othernote','admission','family','social',
+                 'condition'
                   ]
         
         
