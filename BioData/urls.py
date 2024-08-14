@@ -56,16 +56,19 @@ urlpatterns = [
 
     path('randombloodsugar/', views.RandomBloodSugarList.as_view() ),
     path('randombloodsugar/<int:pk>/', views.RandomBloodSugarDetail.as_view() ),
+    path('randombloodsugar/post/', views.RandomBloodSugarPost.as_view() ),
 
     path ('fastingbloodsugar/', views.FastingBloodSugarList.as_view() ),
     path ('fastingbloodsugar/<int:pk>/', views.FastingBloodSugarDetail.as_view() ),
+   path('fastingbloodsugar/post/', views.FastingBloodSugarPost.as_view() ),
 
-    path('bodymassindex/post/', views.BodyMassIndexList.as_view() ),
+    path('bodymassindex/', views.BodyMassIndexList.as_view() ),
     path('bodymassindex/<int:pk>/', views.BodyMassIndexDetail.as_view() ),
-
+    path('bodymassindex/post/', views.BodyMassIndexPost.as_view() ),
 
     path('glycatedhaemoglobin/', views.GlycatedHemoglobinList.as_view() ),
     path('glycatedhaemoglobin/<int:pk>/', views.GlycatedHemoglobinDetail.as_view() ),
+    path('glycatedhaemoglobin/post/', views.GlycatedHemoglobinPost.as_view() ),
 
     path('condition/', views.ConditionList.as_view() ),
     path('condition/<int:pk>/', views.ConditionDetail.as_view() ),

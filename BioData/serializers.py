@@ -228,7 +228,7 @@ class RespiratorySerializer(serializers.ModelSerializer):
 class RandomBloodSugarSerializer(serializers.ModelSerializer):
     class Meta:
         model = RandomBloodSugar
-        fields = ['id','memberId','rbs','readingDate']
+        fields = ['id','memberId','rbs','readingDate','interpretation']
         
         def create(self,validated_data):
             return RandomBloodSugar.objects.all(**validated_data)
@@ -237,13 +237,14 @@ class RandomBloodSugarSerializer(serializers.ModelSerializer):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.rbs = validated_data.get("rbs",instance.rbs)
+            instance.interpretation = validated_data.get("interpretation",instance.interpretation)
             instance.save()
             return instance
         
 class FastingBloodSugarSerializer(serializers.ModelSerializer):
     class Meta:
         model = FastingBloodSugar
-        fields = ['id','memberId','fbs','readingDate']
+        fields = ['id','memberId','fbs','readingDate','interpretation']
         
         def create(self,validated_data):
             return FastingBloodSugar.objects.all(**validated_data)
@@ -252,13 +253,14 @@ class FastingBloodSugarSerializer(serializers.ModelSerializer):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.fbs = validated_data.get("fbs",instance.fbs)
+            instance.interpretation = validated_data.get("interpretation",instance.interpretation)
             instance.save()
             return instance
         
 class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
     class Meta:
         model = GlycatedHaemoglobin
-        fields = ['id','memberId','hba1c','readingDate']
+        fields = ['id','memberId','hba1c','readingDate','interpretation']
         
         def create(self,validated_data):
             return GlycatedHaemoglobin.objects.all(**validated_data)
@@ -267,13 +269,14 @@ class GlycateHaemoglobinSerializer(serializers.ModelSerializer):
             instance.updatedBy = validated_data.get("updatedBy",instance.updatedBy)
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.hba1c = validated_data.get("hba1c",instance.hba1c)
+            instance.interpretation = validated_data.get("interpretation",instance.interpretation)
             instance.save()
             return instance
         
 class BodyMassIndexSerializer(serializers.ModelSerializer):
     class Meta:
         model = BodyMassIndex
-        fields = ['id','memberId','readingDate','updatedBy','height','weight']
+        fields = ['id','memberId','readingDate','updatedBy','height','weight','interpretation']
         
         def create(self,validated_data):
             return BodyMassIndex.objects.all(**validated_data)
@@ -283,6 +286,7 @@ class BodyMassIndexSerializer(serializers.ModelSerializer):
             instance.readingDate = validated_data.get("readingDate",instance.readingDate)
             instance.height = validated_data.get("height",instance.height)
             instance.weight = validated_data.get("weight",instance.weight)
+            instance.interpretation = validated_data.get("interpretation",instance.interpretation)
             instance.save()
             return instance
         

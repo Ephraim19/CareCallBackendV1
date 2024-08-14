@@ -156,30 +156,38 @@ class RandomBloodSugar(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='rbs', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=100)
     rbs = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
 
 class FastingBloodSugar(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='fbs', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=100)
     fbs = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
     
 class GlycatedHaemoglobin(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='hba1c', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.DateField()
+    readingDate = models.CharField(max_length=100)
     hba1c = models.DecimalField(max_digits=5, decimal_places=2)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
 
 class BodyMassIndex(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='bmi', on_delete=models.CASCADE)
     updatedBy = models.EmailField()
-    readingDate = models.CharField(max_length=50)
+    readingDate = models.CharField(max_length=100)
     height = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    interpretation = models.CharField(max_length=50,null=True,blank=True)
+
 
 #Member journey tasks
 

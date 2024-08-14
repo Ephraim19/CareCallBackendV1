@@ -228,7 +228,7 @@ class TemperaturePost(generics.CreateAPIView):
         date_string = now.strftime("%a %b %d %Y")
 
         #Save the task
-        if float(temperature) > 38.0 and float(temperature) < 41.5:
+        if float(temperature) >= 38.0 and float(temperature) < 41.5:
 
             Task.objects.create(
                 memberId= member,
@@ -427,7 +427,7 @@ class RespiratoryRatePost(generics.CreateAPIView):
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
                 task = 'Follow up for Bradypnea for member respiratory rate reading on' + ' ' + readingDate ,
-                taskName = "Hypoxemia Follow up"
+                taskName = "Bradypnea Follow up"
             )
             interpretation = 'Bradypnea'
         elif int(respiratory) > 20:
@@ -439,7 +439,7 @@ class RespiratoryRatePost(generics.CreateAPIView):
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
                 task = 'Follow up for Tachypnea for member respiratory rate reading on' + ' ' + readingDate ,
-                taskName = "Hyperoxemia Follow up"
+                taskName = "Tachypnea Follow up"
             )
             interpretation = 'Tachypnea'
 
@@ -453,33 +453,323 @@ class RespiratoryRateDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RespiratoryRate.objects.all()
     serializer_class = RespiratorySerializer
 
-class RandomBloodSugarList(generics.ListCreateAPIView):
-    queryset = RandomBloodSugar.objects.all()
+#RBS
+class RandomBloodSugarList(generics.ListAPIView):
     serializer_class = RandomBloodSugarSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return RandomBloodSugar.objects.filter(memberId=member_id)
+        else:
+            return RandomBloodSugar.objects.none() 
+    
+
+    
+class RandomBloodSugarPost(generics.CreateAPIView):
+    serializer_class =  RandomBloodSugarSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        rbs =  self.request.data.get('rbs',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        
+        if int(rbs) > 140 and int(rbs) < 200:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Prediabetes for member random blood sugar reading on' + ' ' + readingDate ,
+                taskName = "Prediabetes Follow up"
+            )
+            interpretation = 'Prediabetes'
+        elif int(rbs) >= 200:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Diabetes for member random blood sugar reading on' + ' ' + readingDate ,
+                taskName = "Diabetes Follow up"
+            )
+            interpretation = 'Diabetes'
+
+        else:
+            interpretation = 'Normal'            
+        
+
+        serializer.save(interpretation = interpretation)
 
 class RandomBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RandomBloodSugar.objects.all()
     serializer_class = RandomBloodSugarSerializer
 
-class FastingBloodSugarList(generics.ListCreateAPIView):
-    queryset = FastingBloodSugar.objects.all()
+#FBS
+class FastingBloodSugarList(generics.ListAPIView):
     serializer_class = FastingBloodSugarSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return FastingBloodSugar.objects.filter(memberId=member_id)
+        else:
+            return FastingBloodSugar.objects.none() 
+    
+
+    
+class FastingBloodSugarPost(generics.CreateAPIView):
+    serializer_class =  FastingBloodSugarSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        fbs =  self.request.data.get('fbs',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        
+        if int(fbs) < 70:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Hypoglycemia for member fasting blood sugar reading on' + ' ' + readingDate ,
+                taskName = "Hypoglycemia Follow up"
+            )
+            interpretation = 'Hypoglycemia'
+        elif int(fbs) >= 126:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Diabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
+                taskName = "Diabetes Follow up"
+            )
+            interpretation = 'Diabetes'
+
+        elif int(fbs) > 100 and int(fbs) < 126:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Prediabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
+                taskName = "Prediabetes Follow up"
+            )
+            interpretation = 'Prediabetes'
+
+        else:
+            interpretation = 'Normal'            
+        
+
+        serializer.save(interpretation = interpretation)
+
 
 class FastingBloodSugarDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = FastingBloodSugar.objects.all()
     serializer_class = FastingBloodSugarSerializer
 
-class GlycatedHemoglobinList(generics.ListCreateAPIView):
-    queryset = GlycatedHaemoglobin.objects.all()
+#HBA1C
+class GlycatedHemoglobinList(generics.ListAPIView):
     serializer_class = GlycateHaemoglobinSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return GlycatedHaemoglobin.objects.filter(memberId=member_id)
+        else:
+            return GlycatedHaemoglobin.objects.none() 
+    
+
+    
+class GlycatedHemoglobinPost(generics.CreateAPIView):
+    serializer_class =  GlycateHaemoglobinSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        hba1c =  self.request.data.get('hba1c',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+        
+        if float(hba1c) >= 5.7 and float(hba1c) <= 6.4:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Prediabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
+                taskName = "Prediabetes Follow up"
+            )
+            interpretation = 'Prediabetes'
+        elif float(hba1c) >= 6.5:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for Diabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
+                taskName = "Diabetes Follow up"
+            )
+            interpretation = 'Diabetes'
+
+        else:
+            interpretation = 'Normal'            
+ 
+        
+
+        serializer.save(interpretation = interpretation)
+
 
 class GlycatedHemoglobinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = GlycatedHaemoglobin.objects.all()
     serializer_class = GlycateHaemoglobinSerializer
 
+
+#BODY MASS INDEX
 class BodyMassIndexList(generics.ListAPIView):
-    queryset = BodyMassIndex.objects.all()
     serializer_class = BodyMassIndexSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return BodyMassIndex.objects.filter(memberId=member_id)
+        else:
+            return BodyMassIndex.objects.none() 
+    
+
+    
+class BodyMassIndexPost(generics.CreateAPIView):
+    serializer_class =  BodyMassIndexSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        height =  self.request.data.get('height',None)
+        weight = self.request.data.get('weight',None)
+        readingDate = self.request.data.get('readingDate',None)
+        updatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+
+        def calculate_bmi(weight, height):
+            try:
+                height_m = height/ 100  # Convert height from cm to meters
+                bmi1 = weight / (height_m ** 2)
+                return round(bmi1, 2)
+            except ZeroDivisionError:
+                return "Height cannot be zero."
+            
+        bmi2 = calculate_bmi(int(weight), int(height))
+        print(bmi2)
+        if bmi2 < 18.5:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for underweight for member BMI reading on' + ' ' + readingDate ,
+                taskName = "Underweight Follow up"
+            )
+            interpretation = 'Underweight'
+        elif bmi2 >= 25 and bmi2 <= 29.9:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for overweight for member BMI reading on' + ' ' + readingDate ,
+                taskName = "Overweight Follow up"
+            )
+            interpretation = 'Overweight'
+
+        elif bmi2>= 30 and bmi2 <= 34.9:
+
+            Task.objects.create(
+                memberId= member,
+                taskDueDate=date_string,
+                taskStatus='Not started',
+                taskDepartment='Clinical',  
+                taskAssignedTo=updatedBy  ,
+                task = 'Follow up for obesity class 1 for member BMI reading on' + ' ' + readingDate ,
+                taskName = "Obesity class 1 Follow up"
+            )
+            interpretation = 'Obesity class 1'
+
+        elif bmi2 >= 35 and bmi2 <= 39.9:
+                
+                Task.objects.create(
+                    memberId= member,
+                    taskDueDate=date_string,
+                    taskStatus='Not started',
+                    taskDepartment='Clinical',  
+                    taskAssignedTo=updatedBy  ,
+                    task = 'Follow up for obesity class 2 for member BMI reading on' + ' ' + readingDate ,
+                    taskName = "Obesity class 2 Follow up"
+                )
+                interpretation = 'Obesity class 2'
+
+        elif bmi2>= 40:
+                
+                Task.objects.create(
+                    memberId= member,
+                    taskDueDate=date_string,
+                    taskStatus='Not started',
+                    taskDepartment='Clinical',  
+                    taskAssignedTo=updatedBy  ,
+                    task = 'Follow up for obesity class 3/severe/morbid for member BMI reading on' + ' ' + readingDate ,
+                    taskName = "Obesity class 3 Follow up"
+                )
+                interpretation = 'Obesity class 3'
+
+        else:
+            interpretation = 'Normal'            
+ 
+        
+
+        serializer.save(interpretation = interpretation)
 
 
 class BodyMassIndexDetail(generics.RetrieveUpdateDestroyAPIView):
