@@ -127,7 +127,7 @@ class InteractionList(generics.ListAPIView):
         if member_id is not None:
             return InteractionLog.objects.filter(memberId=member_id)
         else:
-            return InteractionLog.objects.none()  
+            return InteractionLog.objects.all()  
     
 class InteractionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InteractionLog.objects.all()
@@ -797,7 +797,7 @@ class MemberJourneyList(generics.ListAPIView):
         if member_id is not None:
             return memberTaskBase.objects.filter(memberId=member_id)
         else:
-            return memberTaskBase.objects.none()
+            return memberTaskBase.objects.all()
         
 class MemberJourneyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = memberTaskBase.objects.all()
@@ -810,7 +810,7 @@ class TaskList(generics.ListAPIView):
     def get_queryset(self):
 
         member_id = self.request.query_params.get('memberId', None)
-
+        
         if member_id is not None:
             mbrTasks = Task.objects.filter(memberId=member_id)
 
@@ -826,7 +826,17 @@ class TaskList(generics.ListAPIView):
             return tasks_sorted
 
         else:
-            return Task.objects.all()  
+            # members= Member.objects.all()
+            tasks = Task.objects.all()
+
+            # tasks_with_name = []
+            # for task1 in tasks:
+            #     for member1 in members:
+            #         if task1.memberId == member1:
+            #             tasks_with_name.append(task1)
+
+            return tasks
+ 
 
 class TaskListPost(generics.CreateAPIView):
     
