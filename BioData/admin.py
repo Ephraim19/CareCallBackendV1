@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Member,Dependant,Overview,Allergy,memberTaskBase,Task,Surgery,Condition,BodyMassIndex,FastingBloodSugar,GlycatedHaemoglobin,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Social,Family,PulseRate,InteractionLog, BloodPressure, Temperature,Oxygen
+from .models import Member,Dependant,Overview,HumanResource,Allergy,memberTaskBase,Task,Surgery,Condition,BodyMassIndex,FastingBloodSugar,GlycatedHaemoglobin,Othernote,RespiratoryRate,RandomBloodSugar,Admission,Social,Family,PulseRate,InteractionLog, BloodPressure, Temperature,Oxygen
 # Register your models here.
 
 admin.site.register(Member)
@@ -26,3 +26,4 @@ admin.site.register(Condition)
 admin.site.register(Task)
 
 admin.site.register(memberTaskBase)
+admin.site.register(HumanResource)

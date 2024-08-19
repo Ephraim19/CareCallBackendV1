@@ -1,8 +1,10 @@
-from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Allergy,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,NewMemberSerializer,TaskSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,NewMemberSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 class MemberList(generics.ListCreateAPIView):
     
@@ -143,7 +145,7 @@ class BloodPressureList(generics.ListAPIView):
         if member_id is not None:
             return BloodPressure.objects.filter(memberId=member_id)
         else:
-            return BloodPressure.objects.none() 
+            return BloodPressure.objects.all() 
     
 
     
@@ -846,4 +848,59 @@ class TaskListPost(generics.CreateAPIView):
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+
+#HR
+class HR(generics.ListAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+#Tasks analytics
+@api_view(['GET'])
+def TasksAnalytics(request):
+   
+        TasksAnalytics = []
+        TaskObject = {}
+
+        allTasks = Task.objects.all()
+        #All tasks len
+        TaskObject['total'] = len(allTasks)
+
+        #BLOOD PRESSURE
+        high_bp_tasks = allTasks.filter(taskName="Hypertension Follow up")
+        # TasksAnalytics.append({'total_hypertension' : len(high_bp_tasks)})
+        TaskObject['total_hypertension'] = len(high_bp_tasks)
+
+        #complete bp
+        complete_high_bp_tasks = high_bp_tasks.filter(taskStatus="complete")
+        TaskObject['complete_hypertension'] =  len(complete_high_bp_tasks)
+        
+        #Cancelled bp
+        cancelled_high_bp_tasks = high_bp_tasks.filter(taskStatus="cancelled")
+        TaskObject['cancelled_hypertension'] =len(cancelled_high_bp_tasks)
+
+        #Not started
+        not_started_tasks = high_bp_tasks.filter(taskStatus="Not started")
+        TaskObject['not_started'] =len(not_started_tasks)
+
+        #Inprogress
+        inprogress_tasks = high_bp_tasks.filter(taskStatus="Inprogress")
+        TaskObject['in_progress'] = len(inprogress_tasks)
+
+        #High BLOOD SUGAR
+        
+        # pre_diabetis_tasks = allTasks.filter(taskName = "Prediabetes Follow up" )
+        # TaskObject['Prediabetes'] = len(pre_diabetis_tasks)
+
+        # diabetis_tasks = allTasks.filter(taskName = "Diabetes Follow up")
+        # TaskObject['Diabetes'] = len(diabetis_tasks)
+
+        # hypoglycemia_tasks = allTasks.filter(taskName = "Hypoglycemia Follow up")
+        # TaskObject['Hypoglycemia']= len(hypoglycemia_tasks)
+
+        # all_bs = len(pre_diabetis_tasks) + len(diabetis_tasks) + len(hypoglycemia_tasks)
+        # TaskObject['all_bs'] = all_bs
+
+        TasksAnalytics.append(TaskObject)
+        return Response(TasksAnalytics)
 

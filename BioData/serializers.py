@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Task,Dependant,memberTaskBase,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Task,Dependant,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -342,6 +342,12 @@ class TaskSerializer(serializers.ModelSerializer):
             instance.task = validated_data.get('task', instance.task)
             instance.save()
             return instance
+        
+class HrSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HumanResource
+        fields = '__all__'
+
         
 class NewMemberSerializer(serializers.ModelSerializer):
     class Meta:

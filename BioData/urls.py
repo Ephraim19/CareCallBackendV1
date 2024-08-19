@@ -81,5 +81,11 @@ urlpatterns = [
     path('task/<int:pk>/', views.TaskDetail.as_view() ),
 
     path('new/', views.NewMemberAdd.as_view() ),
+
+    #Analytics
+    path('tasks/analytics/', views.TasksAnalytics),
+
+    path("hr",views.HR.as_view())
+
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

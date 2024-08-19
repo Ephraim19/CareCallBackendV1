@@ -220,6 +220,17 @@ class Task(models.Model):
     def __str__(self):
         return self.taskName
     
+
+#HR
+class HumanResource (models.Model): 
+    created = models.DateTimeField(auto_now_add=True)
+    HRTasks = models.IntegerField(default = 0)
+    HREmail = models.EmailField()
+    HRDepartment = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.HREmail
+
     
     
     
