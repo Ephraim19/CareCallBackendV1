@@ -889,17 +889,38 @@ def TasksAnalytics(request):
 
         #High BLOOD SUGAR
         
-        # pre_diabetis_tasks = allTasks.filter(taskName = "Prediabetes Follow up" )
-        # TaskObject['Prediabetes'] = len(pre_diabetis_tasks)
+        pre_diabetis_tasks = allTasks.filter(taskName = "Prediabetes Follow up" )
+        TaskObject['Prediabetes'] = len(pre_diabetis_tasks)
+        pre_diabetis_tasks_complete = pre_diabetis_tasks.filter(taskStatus = "complete")
+        pre_diabetis_tasks_cancelled = pre_diabetis_tasks.filter(taskStatus = "cancelled")
+        # TaskObject['complete_prediabetes'] = len(pre_diabetis_tasks_complete)
+        # TaskObject['cancelled_prediabetes'] = len(pre_diabetis_tasks_cancelled)
+        pre_diabetis_tasks_inprogress = pre_diabetis_tasks.filter(taskStatus = "Inprogress")
+        # TaskObject['in_progress_prediabetes'] = len(pre_diabetis_tasks_inprogress)
+        pre_diabetis_tasks_not_started = pre_diabetis_tasks.filter(taskStatus = "Not started")
 
-        # diabetis_tasks = allTasks.filter(taskName = "Diabetes Follow up")
-        # TaskObject['Diabetes'] = len(diabetis_tasks)
+        diabetis_tasks = allTasks.filter(taskName = "Diabetes Follow up")
+        TaskObject['Diabetes'] = len(diabetis_tasks)
+        diabetis_tasks_complete = diabetis_tasks.filter(taskStatus = "complete")
+        diabetis_tasks_cancelled = diabetis_tasks.filter(taskStatus = "cancelled")
+        diabetis_tasks_inprogress = diabetis_tasks.filter(taskStatus = "Inprogress")
+        diabetis_tasks_not_started = diabetis_tasks.filter(taskStatus = "Not started")
 
-        # hypoglycemia_tasks = allTasks.filter(taskName = "Hypoglycemia Follow up")
-        # TaskObject['Hypoglycemia']= len(hypoglycemia_tasks)
+        hypoglycemia_tasks = allTasks.filter(taskName = "Hypoglycemia Follow up")
+        TaskObject['Hypoglycemia']= len(hypoglycemia_tasks)
+        hypoglycemia_tasks_complete = hypoglycemia_tasks.filter(taskStatus = "complete")
+        hypoglycemia_tasks_cancelled = hypoglycemia_tasks.filter(taskStatus = "cancelled")
+        hypoglycemia_tasks_inprogress = hypoglycemia_tasks.filter(taskStatus = "Inprogress")
+        hypoglycemia_tasks_not_started = hypoglycemia_tasks.filter(taskStatus = "Not started")
 
-        # all_bs = len(pre_diabetis_tasks) + len(diabetis_tasks) + len(hypoglycemia_tasks)
-        # TaskObject['all_bs'] = all_bs
+        TaskObject['complete_bs'] = len(pre_diabetis_tasks_complete) + len(diabetis_tasks_complete) + len(hypoglycemia_tasks_complete)
+        TaskObject['cancelled_bs'] = len(pre_diabetis_tasks_cancelled) + len(diabetis_tasks_cancelled) + len(hypoglycemia_tasks_cancelled)
+        TaskObject['in_progress_bs'] = len(pre_diabetis_tasks_inprogress) + len(diabetis_tasks_inprogress) + len(hypoglycemia_tasks_inprogress)
+        TaskObject['not_started_bs'] = len(pre_diabetis_tasks_not_started) + len(diabetis_tasks_not_started) + len(hypoglycemia_tasks_not_started)
+        
+
+        all_bs = len(pre_diabetis_tasks) + len(diabetis_tasks) + len(hypoglycemia_tasks)
+        TaskObject['all_bs'] = all_bs
 
         TasksAnalytics.append(TaskObject)
         return Response(TasksAnalytics)
