@@ -176,7 +176,7 @@ class BloodPressurePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
+                task = str(member) + ' ' + 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
                 taskName = "Hypertension Follow up"
             )
             interpretation = 'Hypertension'
@@ -191,7 +191,7 @@ class BloodPressurePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
+                task = str(member) +' '+ 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
                 taskName = "Hypertension Follow up"
             )
 
@@ -240,7 +240,7 @@ class TemperaturePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Fever for member temperature reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Fever for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Fever follow up"
             )
             interpretation = 'Fever'
@@ -252,7 +252,7 @@ class TemperaturePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Hyperpyrexia for member temperature reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Hyperpyrexia for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Hyperpyrexia follow up"
             )
             interpretation = 'Hyperpyrexia'
@@ -264,7 +264,7 @@ class TemperaturePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Hypothermia for member temperature reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Hypothermia for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Hypothermia follow up"
             )
             interpretation = 'Hypothermia'
@@ -314,7 +314,7 @@ class OxygenPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Hypoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Hypoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
                 taskName = "Hypoxemia Follow up"
             )
             interpretation = 'Hypoxemia'
@@ -326,7 +326,7 @@ class OxygenPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Hyperoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Hyperoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
                 taskName = "Hyperoxemia Follow up"
             )
             interpretation = 'Hyperoxemia'
@@ -430,7 +430,7 @@ class RespiratoryRatePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Bradypnea for member respiratory rate reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Bradypnea for member respiratory rate reading on' + ' ' + readingDate ,
                 taskName = "Bradypnea Follow up"
             )
             interpretation = 'Bradypnea'
@@ -442,7 +442,7 @@ class RespiratoryRatePost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Tachypnea for member respiratory rate reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Tachypnea for member respiratory rate reading on' + ' ' + readingDate ,
                 taskName = "Tachypnea Follow up"
             )
             interpretation = 'Tachypnea'
@@ -494,7 +494,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Prediabetes for member random blood sugar reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Prediabetes for member random blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
             interpretation = 'Prediabetes'
@@ -506,7 +506,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Diabetes for member random blood sugar reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Diabetes for member random blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
             interpretation = 'Diabetes'
@@ -558,7 +558,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Hypoglycemia for member fasting blood sugar reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Hypoglycemia for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Hypoglycemia Follow up"
             )
             interpretation = 'Hypoglycemia'
@@ -570,7 +570,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Diabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Diabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
             interpretation = 'Diabetes'
@@ -583,7 +583,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Prediabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Prediabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
             interpretation = 'Prediabetes'
@@ -635,7 +635,7 @@ class GlycatedHemoglobinPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Prediabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Prediabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
             interpretation = 'Prediabetes'
@@ -647,7 +647,7 @@ class GlycatedHemoglobinPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for Diabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for Diabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
             interpretation = 'Diabetes'
@@ -712,7 +712,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for underweight for member BMI reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for underweight for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Underweight Follow up"
             )
             interpretation = 'Underweight'
@@ -724,7 +724,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for overweight for member BMI reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for overweight for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Overweight Follow up"
             )
             interpretation = 'Overweight'
@@ -737,7 +737,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 taskStatus='Not started',
                 taskDepartment='Clinical',  
                 taskAssignedTo=updatedBy  ,
-                task = 'Follow up for obesity class 1 for member BMI reading on' + ' ' + readingDate ,
+                task = str(member) +' '+ 'Follow up for obesity class 1 for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Obesity class 1 Follow up"
             )
             interpretation = 'Obesity class 1'
@@ -750,7 +750,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                     taskStatus='Not started',
                     taskDepartment='Clinical',  
                     taskAssignedTo=updatedBy  ,
-                    task = 'Follow up for obesity class 2 for member BMI reading on' + ' ' + readingDate ,
+                    task = str(member) +' '+ 'Follow up for obesity class 2 for member BMI reading on' + ' ' + readingDate ,
                     taskName = "Obesity class 2 Follow up"
                 )
                 interpretation = 'Obesity class 2'
@@ -763,7 +763,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                     taskStatus='Not started',
                     taskDepartment='Clinical',  
                     taskAssignedTo=updatedBy  ,
-                    task = 'Follow up for obesity class 3/severe/morbid for member BMI reading on' + ' ' + readingDate ,
+                    task =  str(member) +' '+ 'Follow up for obesity class 3/severe/morbid for member BMI reading on' + ' ' + readingDate ,
                     taskName = "Obesity class 3 Follow up"
                 )
                 interpretation = 'Obesity class 3'
@@ -1101,8 +1101,32 @@ class AppointmentsList(generics.ListAPIView):
             return Appointments.objects.none()
 
 class AppointmentsPost(generics.CreateAPIView):
-    queryset = Appointments.objects.all()
     serializer_class = AppointmentsSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        appointmentDate =  self.request.data.get('appointmentDate',None)
+        appointmentTime = self.request.data.get('appointmentTime',None)
+        appointmentReason = self.request.data.get('appointmentReason',None)
+        appointmentCreatedBy = self.request.data.get('updatedBy',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        print(member)
+        now = datetime.now().date() + timedelta(days=1)
+        
+        Task.objects.create(
+            memberId= member,
+            taskDueDate=appointmentDate,
+            taskStatus='Not started',
+
+            taskDepartment='Clinical',  
+            taskAssignedTo='admin@g.com'  ,
+            task = str(member) +' '+ 'appointment on' + ' ' + appointmentDate + ' ' + appointmentTime + ' ' + 'for' + ' ' + appointmentReason,
+            taskName = "Appointment Task"
+        )
+
+        serializer.save()
 
 class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointments.objects.all()
