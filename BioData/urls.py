@@ -84,6 +84,12 @@ urlpatterns = [
 
     #Analytics
     path('tasks/analytics/', views.TasksAnalytics),
+    path('member/analytics/', views.MemberAnalytics),
+    path('member/analytics/fbs/', views.MemberAnalyticsFbs),
+    path('member/analytics/hba1c/', views.MemberAnalyticsHba1c),
+    path('member/analytics/rbs/', views.MemberAnalyticsRbs),
+
+
 
     path("hr",views.HR.as_view())
 

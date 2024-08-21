@@ -5,6 +5,8 @@ from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .MyFunctions import MemberMoM
+import calendar
 
 class MemberList(generics.ListCreateAPIView):
     
@@ -917,7 +919,7 @@ def TasksAnalytics(request):
         TaskObject['cancelled_bs'] = len(pre_diabetis_tasks_cancelled) + len(diabetis_tasks_cancelled) + len(hypoglycemia_tasks_cancelled)
         TaskObject['in_progress_bs'] = len(pre_diabetis_tasks_inprogress) + len(diabetis_tasks_inprogress) + len(hypoglycemia_tasks_inprogress)
         TaskObject['not_started_bs'] = len(pre_diabetis_tasks_not_started) + len(diabetis_tasks_not_started) + len(hypoglycemia_tasks_not_started)
-        
+
 
         all_bs = len(pre_diabetis_tasks) + len(diabetis_tasks) + len(hypoglycemia_tasks)
         TaskObject['all_bs'] = all_bs
@@ -925,3 +927,163 @@ def TasksAnalytics(request):
         TasksAnalytics.append(TaskObject)
         return Response(TasksAnalytics)
 
+@api_view(['GET'])
+def MemberAnalytics(request):
+    mbrmonths = []
+    systolic_list = []
+    diastolic_list = []
+    member_id = request.query_params.get('memberId', None)
+    
+    member_bp = BloodPressure.objects.filter(memberId=member_id)
+    i = 1
+    allMbrBp = []
+
+    #Blood Pressure
+    #GET THE MEMBER MONTHS
+    for bp in member_bp:
+        reading_month = datetime.strptime(bp.readingDate, "%a %b %d %Y").date().month
+
+        if reading_month not in mbrmonths:
+            mbrmonths.append(reading_month)
+
+    for month in mbrmonths:
+        a = 'month' + str(i)
+        a = []
+
+        systolic_list.clear()
+        diastolic_list.clear()
+
+        for bp in member_bp:
+            reading_date = datetime.strptime(bp.readingDate, "%a %b %d %Y").date()
+            if reading_date.month == month:
+                systolic_list.append(bp.systolic)
+                diastolic_list.append(bp.diastolic)
+
+        avg_systolic = sum(systolic_list) / len(systolic_list)
+        avg_diastolic = sum(diastolic_list) / len(diastolic_list) 
+
+        a.append(calendar.month_name[month][:3]) 
+        a.append(avg_systolic)
+        a.append(avg_diastolic)
+        allMbrBp.append(a)
+
+        i = i + 1
+
+    return Response(allMbrBp)
+
+    
+@api_view(['GET'])
+def MemberAnalyticsFbs (request):
+    mbrmonths = []
+    fbs_list = []
+    member_id = request.query_params.get('memberId', None)
+
+    member_fbs = FastingBloodSugar.objects.filter(memberId=member_id)
+    i = 1
+    allMbrBs = []
+
+    #Blood Pressure
+    #GET THE MEMBER MONTHS
+    for bp in member_fbs:
+        reading_month = datetime.strptime(bp.readingDate, "%a %b %d %Y").date().month
+
+        if reading_month not in mbrmonths:
+            mbrmonths.append(reading_month)
+
+    for month in mbrmonths:
+        a = 'month' + str(i)
+        a = []
+
+        fbs_list.clear()
+
+        for bp in member_fbs:
+            reading_date = datetime.strptime(bp.readingDate, "%a %b %d %Y").date()
+            if reading_date.month == month:
+                fbs_list.append(bp.fbs)
+
+        avg_fbs = sum(fbs_list) / len(fbs_list)
+
+        a.append(calendar.month_name[month][:3]) 
+        a.append(avg_fbs)
+        allMbrBs.append(a)
+
+        i = i + 1
+
+    return Response(allMbrBs)
+
+@api_view(['GET'])
+def MemberAnalyticsRbs (request):
+    mbrmonths = []
+    fbs_list = []
+    member_id = request.query_params.get('memberId', None)
+
+    member_fbs = RandomBloodSugar.objects.filter(memberId=member_id)
+    i = 1
+    allMbrBs = []
+
+    #Blood Pressure
+    #GET THE MEMBER MONTHS
+    for bp in member_fbs:
+        reading_month = datetime.strptime(bp.readingDate, "%a %b %d %Y").date().month
+
+        if reading_month not in mbrmonths:
+            mbrmonths.append(reading_month)
+
+    for month in mbrmonths:
+        a = 'month' + str(i)
+        a = []
+
+        fbs_list.clear()
+
+        for bp in member_fbs:
+            reading_date = datetime.strptime(bp.readingDate, "%a %b %d %Y").date()
+            if reading_date.month == month:
+                fbs_list.append(bp.rbs)
+
+        avg_fbs = sum(fbs_list) / len(fbs_list)
+
+        a.append(calendar.month_name[month][:3]) 
+        a.append(avg_fbs)
+        allMbrBs.append(a)
+
+        i = i + 1
+
+    return Response(allMbrBs)
+
+@api_view(['GET'])
+def MemberAnalyticsHba1c (request):
+    mbrmonths = []
+    fbs_list = []
+    member_id = request.query_params.get('memberId', None)
+    member_fbs = GlycatedHaemoglobin.objects.filter(memberId=member_id)
+    i = 1
+    allMbrBs = []
+
+    #Blood Pressure
+    #GET THE MEMBER MONTHS
+    for bp in member_fbs:
+        reading_month = datetime.strptime(bp.readingDate, "%a %b %d %Y").date().month
+
+        if reading_month not in mbrmonths:
+            mbrmonths.append(reading_month)
+
+    for month in mbrmonths:
+        a = 'month' + str(i)
+        a = []
+
+        fbs_list.clear()
+
+        for bp in member_fbs:
+            reading_date = datetime.strptime(bp.readingDate, "%a %b %d %Y").date()
+            if reading_date.month == month:
+                fbs_list.append(bp.hba1c)
+
+        avg_fbs = sum(fbs_list) / len(fbs_list)
+
+        a.append(calendar.month_name[month][:3]) 
+        a.append(avg_fbs)
+        allMbrBs.append(a)
+
+        i = i + 1
+
+    return Response(allMbrBs)
