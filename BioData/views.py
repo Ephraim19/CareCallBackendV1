@@ -1,5 +1,5 @@
-from .models import Member,Task,Dependant,memberTaskBase,Condition,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,NewMemberSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Task,Dependant,memberTaskBase,Appointments,Condition,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,NewMemberSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta
@@ -1087,3 +1087,23 @@ def MemberAnalyticsHba1c (request):
         i = i + 1
 
     return Response(allMbrBs)
+
+class AppointmentsList(generics.ListAPIView):
+    serializer_class = AppointmentsSerializer
+
+    def get_queryset(self):
+
+        member_id = self.request.query_params.get('memberId', None)
+        
+        if member_id is not None:
+            return Appointments.objects.filter(memberId=member_id)
+        else:
+            return Appointments.objects.none()
+
+class AppointmentsPost(generics.CreateAPIView):
+    queryset = Appointments.objects.all()
+    serializer_class = AppointmentsSerializer
+
+class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Appointments.objects.all()
+    serializer_class = AppointmentsSerializer

@@ -231,8 +231,24 @@ class HumanResource (models.Model):
     def __str__(self):
         return self.HREmail
 
+#Appointments
+class Appointments(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    appointmentDate = models.CharField(max_length=100)
+    appointmentTime = models.CharField(max_length=100)
+    appointmentReason = models.CharField(max_length=50)
+    appointmentDepartment = models.CharField(max_length=50)
+    appointmentCreatedBy = models.EmailField()
     
-    
+    appointmentStatus = models.CharField(max_length=50,default='Not started')
+    appointmentAssignedTo = models.CharField(max_length=50,blank=True,null=True)
+    appointmentNotes = models.TextField(blank=True,null=True)
+    appointmentNotesDate = models.CharField(max_length=50,blank=True,null=True)
+    appointmentNotesBy = models.EmailField(blank=True,null=True)
+
+    def __str__(self):
+        return self.appointmentReason
     
     
     

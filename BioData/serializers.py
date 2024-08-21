@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Task,Dependant,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Task,Dependant,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -347,6 +347,31 @@ class HrSerializer(serializers.ModelSerializer):
     class Meta:
         model = HumanResource
         fields = '__all__'
+
+class AppointmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Appointments
+        fields = ['id','memberId','appointmentDate','appointmentTime','appointmentReason','appointmentStatus',
+                  'appointmentDepartment',
+                  'appointmentAssignedTo','appointmentNotes','appointmentNotesDate','appointmentNotesBy','appointmentCreatedBy']
+        
+        def create(self, validated_data):
+            return Appointments.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.appointmentDate = validated_data.get('appointmentDate', instance.appointmentDate)
+            instance.appointmentTime = validated_data.get('appointmentTime', instance.appointmentTime)
+            instance.appointmentReason = validated_data.get('appointmentReason', instance.appointmentReason)
+            instance.appointmentStatus = validated_data.get('appointmentStatus', instance.appointmentStatus)
+            instance.appointmentDepartment = validated_data.get('appointmentDepartment', instance.appointmentDepartment)
+            instance.appointmentAssignedTo = validated_data.get('appointmentAssignedTo', instance.appointmentAssignedTo)
+            instance.appointmentNotes = validated_data.get('appointmentNotes', instance.appointmentNotes)
+            instance.appointmentNotesDate = validated_data.get('appointmentNotesDate', instance.appointmentNotesDate)
+            instance.appointmentNotesBy = validated_data.get('appointmentNotesBy', instance.appointmentNotesBy)
+            instance.appointmentCreatedBy = validated_data.get('appointmentCreatedBy', instance.appointmentCreatedBy)
+            
+            instance.save()
+            return instance
 
         
 class NewMemberSerializer(serializers.ModelSerializer):

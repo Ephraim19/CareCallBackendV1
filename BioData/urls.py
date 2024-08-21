@@ -80,6 +80,10 @@ urlpatterns = [
     path('task/post/', views.TaskListPost.as_view() ),
     path('task/<int:pk>/', views.TaskDetail.as_view() ),
 
+    path('appointment/', views.AppointmentsList.as_view() ),
+    path('appointment/post/', views. AppointmentsPost.as_view() ),
+    path('appointment/<int:pk>/', views.AppointmentsDetail.as_view() ),
+
     path('new/', views.NewMemberAdd.as_view() ),
 
     #Analytics
@@ -88,8 +92,6 @@ urlpatterns = [
     path('member/analytics/fbs/', views.MemberAnalyticsFbs),
     path('member/analytics/hba1c/', views.MemberAnalyticsHba1c),
     path('member/analytics/rbs/', views.MemberAnalyticsRbs),
-
-
 
     path("hr",views.HR.as_view())
 
