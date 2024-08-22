@@ -205,20 +205,6 @@ class memberTaskBase(models.Model):
 
     def __str__(self):
         return self.memberId.memberName
-
-
-#Tasks
-class Task(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
-    taskName = models.CharField(max_length=50)
-    task = models.TextField()
-    taskDueDate = models.CharField(max_length=50)
-    taskStatus = models.CharField(max_length=20)
-    taskAssignedTo = models.CharField(max_length=50)
-    taskDepartment = models.CharField(max_length=50)
-    def __str__(self):
-        return self.taskName
     
 
 #HR
@@ -240,8 +226,8 @@ class Appointments(models.Model):
     appointmentReason = models.CharField(max_length=50)
     appointmentDepartment = models.CharField(max_length=50)
     appointmentCreatedBy = models.EmailField()
-    
     appointmentStatus = models.CharField(max_length=50,default='Not started')
+
     appointmentAssignedTo = models.CharField(max_length=50,blank=True,null=True)
     appointmentNotes = models.TextField(blank=True,null=True)
     appointmentNotesDate = models.CharField(max_length=50,blank=True,null=True)
@@ -251,6 +237,27 @@ class Appointments(models.Model):
         return self.appointmentReason
     
     
-    
+#Tasks
+class Task(models.Model):
+        
+    # STATUS_CHOICES = [
+    #     ('Not started', 'Not started'),
+    #     ('Inprogress', 'Inprogress'),
+    #     ('Cancelled', 'Cancelled'),
+    #     ('Complete', 'Complete'),
+    # ]
+        
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    taskName = models.CharField(max_length=50)
+    task = models.TextField()
+    taskDueDate = models.CharField(max_length=50)
+    taskStatus = models.CharField(max_length=20)
+    taskAssignedTo = models.CharField(max_length=50)
+    taskDepartment = models.CharField(max_length=50)
+    taskAppointmentId = models.ForeignKey(Appointments, related_name='taskAppointmentId',null=True,blank=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.taskName
     
     

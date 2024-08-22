@@ -328,7 +328,7 @@ class MemberJourneySerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id','memberId', 'taskName', 'taskDueDate', 'taskStatus', 'taskDepartment', 'taskAssignedTo','task']
+        fields = ['id','memberId', 'taskName', 'taskDueDate', 'taskStatus', 'taskDepartment', 'taskAssignedTo','task','taskAppointmentId']
         
         def create(self, validated_data):
             return Task.objects.create(**validated_data)
@@ -340,6 +340,7 @@ class TaskSerializer(serializers.ModelSerializer):
             instance.taskAssignedTo = validated_data.get('taskAssignedTo', instance.taskAssignedTo)
             instance.taskName = validated_data.get('taskName',instance.taskName)
             instance.task = validated_data.get('task', instance.task)
+            instance.taskAppointmentId = validated_data.get('taskAppointmentId', instance.taskAppointmentId)
             instance.save()
             return instance
         

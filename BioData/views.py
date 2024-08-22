@@ -830,27 +830,46 @@ class TaskList(generics.ListAPIView):
             return tasks_sorted
 
         else:
-            # members= Member.objects.all()
             tasks = Task.objects.all()
-
-            # tasks_with_name = []
-            # for task1 in tasks:
-            #     for member1 in members:
-            #         if task1.memberId == member1:
-            #             tasks_with_name.append(task1)
-
             return tasks
  
 
 class TaskListPost(generics.CreateAPIView):
-    
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
+
+    #     taskStatus = self.request.data.get('taskStatus', None)
+    #     taskName = self.request.data.get('taskName', None)
+    #     taskAppointmentId = self.request.data.get('taskAppointmentId', None)
+    #     print(taskName)
+
+    #     if taskName == "Appointment Task":
+    #         print(taskStatus,taskName,taskAppointmentId)
+    #         Appointments.objects.update(id = taskAppointmentId, appointmentStatus=taskStatus)
+
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+   # Update appointment status
+    def perform_update(self, serializer):
+        serializer.save()
+
+        if serializer.instance.taskName == "Appointment Task":
+
+            if serializer.instance.taskStatus == "complete":
+                appointment = Appointments.objects.get(id=serializer.instance.taskAppointmentId.id)
+                appointment.appointmentStatus = "complete"
+                appointment.save()
+
+            elif serializer.instance.taskStatus == "cancelled":
+                appointment = Appointments.objects.get(id=serializer.instance.taskAppointmentId.id)
+                appointment.appointmentStatus = "cancelled"
+                appointment.save()
 
 #HR
 class HR(generics.ListAPIView):
@@ -1096,7 +1115,7 @@ class AppointmentsList(generics.ListAPIView):
         member_id = self.request.query_params.get('memberId', None)
         
         if member_id is not None:
-            return Appointments.objects.filter(memberId=member_id)
+            return Appointments.objects.filter(memberId=member_id, appointmentStatus ='Not started' or 'Inprogress')
         else:
             return Appointments.objects.none()
 
@@ -1104,29 +1123,28 @@ class AppointmentsPost(generics.CreateAPIView):
     serializer_class = AppointmentsSerializer
 
     def perform_create(self,serializer):
+        serializer.save()
+
         member_id = self.request.data.get('memberId',None)
         appointmentDate =  self.request.data.get('appointmentDate',None)
         appointmentTime = self.request.data.get('appointmentTime',None)
         appointmentReason = self.request.data.get('appointmentReason',None)
-        appointmentCreatedBy = self.request.data.get('updatedBy',None)
 
-        #get member instace
+        #get member and appointment instance
         member = Member.objects.get(id=member_id)
-        print(member)
-        now = datetime.now().date() + timedelta(days=1)
+        appointment = Appointments.objects.get(id=serializer.data['id'])
         
         Task.objects.create(
             memberId= member,
             taskDueDate=appointmentDate,
             taskStatus='Not started',
-
             taskDepartment='Clinical',  
-            taskAssignedTo='admin@g.com'  ,
+            taskAssignedTo='admin@g.com' ,
             task = str(member) +' '+ 'appointment on' + ' ' + appointmentDate + ' ' + appointmentTime + ' ' + 'for' + ' ' + appointmentReason,
-            taskName = "Appointment Task"
+            taskName = "Appointment Task",
+            taskAppointmentId = appointment
         )
 
-        serializer.save()
 
 class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointments.objects.all()
