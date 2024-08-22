@@ -93,6 +93,8 @@ urlpatterns = [
     path('member/analytics/hba1c/', views.MemberAnalyticsHba1c),
     path('member/analytics/rbs/', views.MemberAnalyticsRbs),
 
+    path('appointment/analytics/', views.AppointmentAnalytics),
+
     path("hr",views.HR.as_view())
 
 ]

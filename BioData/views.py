@@ -1117,7 +1117,7 @@ class AppointmentsList(generics.ListAPIView):
         if member_id is not None:
             return Appointments.objects.filter(memberId=member_id, appointmentStatus ='Not started' or 'Inprogress')
         else:
-            return Appointments.objects.none()
+            return Appointments.objects.all()
 
 class AppointmentsPost(generics.CreateAPIView):
     serializer_class = AppointmentsSerializer
@@ -1145,7 +1145,46 @@ class AppointmentsPost(generics.CreateAPIView):
             taskAppointmentId = appointment
         )
 
-
 class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointments.objects.all()
     serializer_class = AppointmentsSerializer
+
+@api_view(['GET'])
+def AppointmentAnalytics(request):
+    AppointmentsAnalytics = []
+    AppointmentObject = {}
+
+    allAppointments = Appointments.objects.all()
+    #All tasks len
+    AppointmentObject['total'] = len(allAppointments)
+
+    #complete bp
+    complete_appointments = allAppointments.filter(appointmentStatus="complete")
+    AppointmentObject['complete'] =  len(complete_appointments)
+    
+    #Cancelled bp
+    cancelled_appointments = allAppointments.filter(appointmentStatus="cancelled")
+    AppointmentObject['cancelled'] =len(cancelled_appointments)
+
+    #Not started
+    not_started_appointments = allAppointments.filter(appointmentStatus="Not started")
+    AppointmentObject['not_started'] =len(not_started_appointments)
+
+    #Inprogress
+    inprogress_appointments = allAppointments.filter(appointmentStatus="Inprogress")
+    AppointmentObject['in_progress'] = len(inprogress_appointments)
+
+    #Doctor
+    doctor_appointments = allAppointments.filter(appointmentDepartment ="Doctor")
+    AppointmentObject['doctor'] = len(doctor_appointments)
+
+    #Nutritionist
+    nutritionist_appointments = allAppointments.filter(appointmentDepartment ="Nutritionist")
+    AppointmentObject['nutritionist'] = len(nutritionist_appointments)
+
+    #Psychologist
+    psychologist_appointments = allAppointments.filter(appointmentDepartment ="Psychologist")
+    AppointmentObject['psychologist'] = len(psychologist_appointments)
+
+    AppointmentsAnalytics.append(AppointmentObject)
+    return Response(AppointmentsAnalytics)
