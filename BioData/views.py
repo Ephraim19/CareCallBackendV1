@@ -1,12 +1,28 @@
 from .models import Member,Task,Dependant,memberTaskBase,Appointments,Condition,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
 from .serializers import MemberSerializer,NewMemberSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 from datetime import datetime, timedelta
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .MyFunctions import MemberMoM
 import calendar
+import requests
+import json
+
+class SearchMember(APIView):
+
+    def post(self, request, *args, **kwargs):
+        search_term = request.data.get('name', None)
+        print(search_term)
+        if search_term is not None:
+            members = Member.objects.filter(memberName__icontains=search_term)
+            serializer = MemberSerializer(members, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'error': 'No search term provided'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class MemberList(generics.ListCreateAPIView):
     
@@ -23,15 +39,20 @@ class NewMemberAdd(generics.CreateAPIView):
     serializer_class = NewMemberSerializer
 
     def perform_create(self, serializer):
+        #Assigne care Manager and engagement officer
+        HR = HumanResource.objects.filter(HRRole = "Care Manager", HRStatus = "Active")
+        HR1 = HumanResource.objects.filter(HRRole = "Engagement Lead", HRStatus = "Active")
 
-        memberDOB = self.request.data.get('memberDOB', None)
-        memberName = self.request.data.get('memberName', None)
-        memberFacility = self.request.data.get('memberFacility', None)
-        memberPhone = self.request.data.get('memberPhone', None)
-        memberGender = self.request.data.get('memberGender', None)
-        memerEmail = self.request.data.get('memerEmail', None)
+     #Set the Doctor, nutritionist or Psychologist assignee to task and add task to HR
+        hr_with_lowest_tasks = HR.order_by('HRTasks').first()
+        hr_with_lowest_tasks.HRTasks += 1
+        hr_with_lowest_tasks.save()         
+
+        hr_with_lowest_tasks1 = HR1.order_by('HRTasks').first()
+        hr_with_lowest_tasks1.HRTasks += 1
+        hr_with_lowest_tasks1.save()  
         
-        serializer.save(memberDOB=memberDOB, memberName=memberName, memberFacility=memberFacility, memberPhone=memberPhone, memberGender=memberGender,memerEmail=memerEmail)
+        serializer.save(memberCareManager = hr_with_lowest_tasks.HREmail, memberEngagementLead = hr_with_lowest_tasks1.HREmail)
 
 
 class DependantList(generics.ListCreateAPIView):
@@ -166,7 +187,12 @@ class BloodPressurePost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
-        
+
+     #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
         
         if int(systolic) > clinical_info[0] or  int(diastolic) > clinical_info[2]:
 
@@ -174,8 +200,7 @@ class BloodPressurePost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) + ' ' + 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
                 taskName = "Hypertension Follow up"
             )
@@ -189,8 +214,7 @@ class BloodPressurePost(generics.CreateAPIView):
                 memberId=member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for hypotension for member blood pressure reading on' +" " + readingDate, 
                 taskName = "Hypertension Follow up"
             )
@@ -231,6 +255,12 @@ class TemperaturePost(generics.CreateAPIView):
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
 
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
         #Save the task
         if float(temperature) >= 38.0 and float(temperature) < 41.5:
 
@@ -238,8 +268,7 @@ class TemperaturePost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Fever for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Fever follow up"
             )
@@ -250,8 +279,7 @@ class TemperaturePost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Hyperpyrexia for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Hyperpyrexia follow up"
             )
@@ -262,8 +290,7 @@ class TemperaturePost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Hypothermia for member temperature reading on' + ' ' + readingDate ,
                 taskName = " Hypothermia follow up"
             )
@@ -304,7 +331,13 @@ class OxygenPost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
-        
+
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
         
         if float(oxygen) < 90.0:
 
@@ -312,8 +345,7 @@ class OxygenPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Hypoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
                 taskName = "Hypoxemia Follow up"
             )
@@ -324,8 +356,7 @@ class OxygenPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Hyperoxemia for member oxygen saturation reading on' + ' ' + readingDate ,
                 taskName = "Hyperoxemia Follow up"
             )
@@ -377,7 +408,6 @@ class PulsePost(generics.CreateAPIView):
         #         memberId= member,
         #         taskDueDate=date_string,
         #         taskStatus='Not started',
-        #         taskDepartment='Clinical',  
         #         taskAssignedTo=updatedBy  ,
         #         task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
         #         taskName = "Hypertension Follow up"
@@ -420,16 +450,19 @@ class RespiratoryRatePost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
-        
-        
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
         if int(respiratory) < 12:
 
             Task.objects.create(
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Bradypnea for member respiratory rate reading on' + ' ' + readingDate ,
                 taskName = "Bradypnea Follow up"
             )
@@ -440,8 +473,7 @@ class RespiratoryRatePost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Tachypnea for member respiratory rate reading on' + ' ' + readingDate ,
                 taskName = "Tachypnea Follow up"
             )
@@ -484,7 +516,12 @@ class RandomBloodSugarPost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
-        
+
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
         
         if int(rbs) > 140 and int(rbs) < 200:
 
@@ -492,8 +529,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Prediabetes for member random blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
@@ -504,8 +540,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Diabetes for member random blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
@@ -548,16 +583,21 @@ class FastingBloodSugarPost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
-        
-        
+
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
+
         if int(fbs) < 70:
 
             Task.objects.create(
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Hypoglycemia for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Hypoglycemia Follow up"
             )
@@ -568,8 +608,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Diabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
@@ -581,8 +620,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Prediabetes for member fasting blood sugar reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
@@ -626,6 +664,13 @@ class GlycatedHemoglobinPost(generics.CreateAPIView):
         member = Member.objects.get(id=member_id)
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
+
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
         
         if float(hba1c) >= 5.7 and float(hba1c) <= 6.4:
 
@@ -633,8 +678,7 @@ class GlycatedHemoglobinPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Prediabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
                 taskName = "Prediabetes Follow up"
             )
@@ -645,8 +689,7 @@ class GlycatedHemoglobinPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for Diabetes for member glycated haemoglobin reading on' + ' ' + readingDate ,
                 taskName = "Diabetes Follow up"
             )
@@ -694,6 +737,12 @@ class BodyMassIndexPost(generics.CreateAPIView):
         now = datetime.now().date() + timedelta(days=1)
         date_string = now.strftime("%a %b %d %Y")
 
+             #+1
+        HR = HumanResource.objects.filter(HREmail = member.memberCareManager)
+        hr_member = HR.first()
+        hr_member.HRTasks += 1
+        hr_member.save()  
+
         def calculate_bmi(weight, height):
             try:
                 height_m = height/ 100  # Convert height from cm to meters
@@ -710,8 +759,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for underweight for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Underweight Follow up"
             )
@@ -722,8 +770,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for overweight for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Overweight Follow up"
             )
@@ -735,8 +782,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                 memberId= member,
                 taskDueDate=date_string,
                 taskStatus='Not started',
-                taskDepartment='Clinical',  
-                taskAssignedTo=updatedBy  ,
+                taskAssignedTo=member.memberCareManager  ,
                 task = str(member) +' '+ 'Follow up for obesity class 1 for member BMI reading on' + ' ' + readingDate ,
                 taskName = "Obesity class 1 Follow up"
             )
@@ -748,8 +794,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                     memberId= member,
                     taskDueDate=date_string,
                     taskStatus='Not started',
-                    taskDepartment='Clinical',  
-                    taskAssignedTo=updatedBy  ,
+                    taskAssignedTo=member.memberCareManager  ,
                     task = str(member) +' '+ 'Follow up for obesity class 2 for member BMI reading on' + ' ' + readingDate ,
                     taskName = "Obesity class 2 Follow up"
                 )
@@ -761,8 +806,7 @@ class BodyMassIndexPost(generics.CreateAPIView):
                     memberId= member,
                     taskDueDate=date_string,
                     taskStatus='Not started',
-                    taskDepartment='Clinical',  
-                    taskAssignedTo=updatedBy  ,
+                    taskAssignedTo=member.memberCareManager  ,
                     task =  str(member) +' '+ 'Follow up for obesity class 3/severe/morbid for member BMI reading on' + ' ' + readingDate ,
                     taskName = "Obesity class 3 Follow up"
                 )
@@ -835,21 +879,20 @@ class TaskList(generics.ListAPIView):
  
 
 class TaskListPost(generics.CreateAPIView):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
-    # def perform_create(self, serializer):
-    #     serializer.save()
+    def perform_create(self, serializer):
+        #Get the dpt
+        dpt = self.request.data.get('department', None)
 
-    #     taskStatus = self.request.data.get('taskStatus', None)
-    #     taskName = self.request.data.get('taskName', None)
-    #     taskAppointmentId = self.request.data.get('taskAppointmentId', None)
-    #     print(taskName)
+     #Set the Doctor, nutritionist or Psychologist assignee to task and add task to HR
+        HR = HumanResource.objects.filter(HRRole = dpt, HRStatus = "Active")
+        hr_with_lowest_tasks = HR.order_by('HRTasks').first()
+        hr_with_lowest_tasks.HRTasks += 1
+        hr_with_lowest_tasks.save()  # Save the updated object
 
-    #     if taskName == "Appointment Task":
-    #         print(taskStatus,taskName,taskAppointmentId)
-    #         Appointments.objects.update(id = taskAppointmentId, appointmentStatus=taskStatus)
-
+        serializer.save(taskAssignedTo = hr_with_lowest_tasks.HREmail)
+        
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
@@ -870,11 +913,6 @@ class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
                 appointment = Appointments.objects.get(id=serializer.instance.taskAppointmentId.id)
                 appointment.appointmentStatus = "cancelled"
                 appointment.save()
-
-#HR
-class HR(generics.ListAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
 
 #Tasks analytics
 @api_view(['GET'])
@@ -1123,27 +1161,36 @@ class AppointmentsPost(generics.CreateAPIView):
     serializer_class = AppointmentsSerializer
 
     def perform_create(self,serializer):
-        serializer.save()
 
         member_id = self.request.data.get('memberId',None)
         appointmentDate =  self.request.data.get('appointmentDate',None)
         appointmentTime = self.request.data.get('appointmentTime',None)
         appointmentReason = self.request.data.get('appointmentReason',None)
+        dpt = self.request.data.get('appointmentDepartment',None)
+
+        #Set the Doctor, nutritionist or Psychologist assignee to task and add task to HR
+        HR = HumanResource.objects.filter(HRRole = dpt, HRStatus = "Active")
+        hr_with_lowest_tasks = HR.order_by('HRTasks').first()
+        hr_with_lowest_tasks.HRTasks += 1
+        hr_with_lowest_tasks.save() 
+
+        serializer.save(appointmentAssignedTo = hr_with_lowest_tasks.HREmail)
 
         #get member and appointment instance
         member = Member.objects.get(id=member_id)
         appointment = Appointments.objects.get(id=serializer.data['id'])
+     
         
         Task.objects.create(
             memberId= member,
             taskDueDate=appointmentDate,
             taskStatus='Not started',
-            taskDepartment='Clinical',  
-            taskAssignedTo='admin@g.com' ,
-            task = str(member) +' '+ 'appointment on' + ' ' + appointmentDate + ' ' + appointmentTime + ' ' + 'for' + ' ' + appointmentReason,
+            taskAssignedTo=hr_with_lowest_tasks.HREmail ,
+            task = str(member) +' '+ 'appointment on' + ' ' + appointmentDate + ' ' + appointmentTime + ' ' + 'for' + ' ' + appointmentReason + 'to see' + ' ' + dpt,
             taskName = "Appointment Task",
             taskAppointmentId = appointment
         )
+
 
 class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointments.objects.all()
@@ -1188,3 +1235,99 @@ def AppointmentAnalytics(request):
 
     AppointmentsAnalytics.append(AppointmentObject)
     return Response(AppointmentsAnalytics)
+
+
+#HR
+class HR(generics.ListAPIView):
+    queryset = HumanResource.objects.all()
+    serializer_class = HrSerializer
+
+        
+
+
+# import requests
+# from django.conf import settings
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+
+class SendWhatsAppMessage(APIView):
+
+    def post(self, request, *args, **kwargs):
+        # Extract the phone number and message from the request data
+        # phone_number = request.data.get('phone_number')
+        # message_text = request.data.get('message')
+        phone_number = '+254705018725'
+        message_text = 'Share your health data with us'
+
+        ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
+        PHONE_NUMBER_ID = '391848354014987'
+
+        if not phone_number or not message_text:
+            return Response(
+                {"error": "phone_number and message are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
+        headers = {
+            'Authorization': f'Bearer {ACCESS_TOKEN}',
+            'Content-Type': 'application/json'
+        }
+
+        payload = {
+            "messaging_product": "whatsapp",
+            "to": phone_number,
+            "type": "text",
+            "text": {
+                "body": message_text
+            }
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        if response.status_code == 200:
+            return Response({"success": "Message sent successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Failed to send message", "details": response.json()},
+                            status=response.status_code)
+
+
+        # print(request.data)
+        # # Replace these with your actual credentials and details
+        # ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
+        # PHONE_NUMBER_ID = '391848354014987'
+        
+        # # Get the recipient phone number and message from the request data
+
+        # # recipient_number = request.data.get('recipient_number')
+        # # message_content = request.data.get('message')
+
+        # message_content = "Hello, this is a test message from the WhatsApp API"
+        # recipient_number =  "+254705018725"
+
+
+        # if not recipient_number or not message_content:
+        #     return Response({"error": "Recipient number and message are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
+
+        # headers = {
+        #     'Authorization': f'Bearer {ACCESS_TOKEN}',
+        #     'Content-Type': 'application/json'
+        # }
+
+        # data =json.stringify({
+        #     'messaging_product': 'whatsapp',
+        #     'to': recipient_number,
+        #     'type': 'text',
+        #     'text': {'body': message_content}
+        # })
+
+        # # try:
+        # requests.post(url, headers=headers, data=json.dumps(data))
+        #     # response.raise_for_status()  # Raises an HTTPError for bad responses
+        #     # return Response(response.json(), status=status.HTTP_200_OK)
+        # # except requests.exceptions.RequestException as e:
+        # #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

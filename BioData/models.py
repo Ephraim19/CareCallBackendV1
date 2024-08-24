@@ -17,9 +17,9 @@ class Member(models.Model):
     memberProgram = models.CharField(max_length=20,blank=True)
     memberStatus = models.CharField(max_length=20,blank=True)
     memberOnboardingStage = models.CharField(max_length=20,blank=True)
-    memberCareManager = models.CharField(max_length=50,blank=True)
+    memberCareManager = models.EmailField()
     memberNutritionist = models.CharField(max_length=50,blank=True)
-    memberEngagementLead = models.CharField(max_length=50,blank=True)
+    memberEngagementLead = models.EmailField()
     memberEmployer = models.CharField(max_length=50,blank=True)
     memberInsurer = models.CharField(max_length=50,blank=True)
     memberInsuranceId = models.CharField(max_length=25,blank=True)
@@ -207,16 +207,6 @@ class memberTaskBase(models.Model):
         return self.memberId.memberName
     
 
-#HR
-class HumanResource (models.Model): 
-    created = models.DateTimeField(auto_now_add=True)
-    HRTasks = models.IntegerField(default = 0)
-    HREmail = models.EmailField()
-    HRDepartment = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.HREmail
-
 #Appointments
 class Appointments(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -227,8 +217,8 @@ class Appointments(models.Model):
     appointmentDepartment = models.CharField(max_length=50)
     appointmentCreatedBy = models.EmailField()
     appointmentStatus = models.CharField(max_length=50,default='Not started')
+    appointmentAssignedTo = models.EmailField(default='machayoephraim@gmail.com')
 
-    appointmentAssignedTo = models.CharField(max_length=50,blank=True,null=True)
     appointmentNotes = models.TextField(blank=True,null=True)
     appointmentNotesDate = models.CharField(max_length=50,blank=True,null=True)
     appointmentNotesBy = models.EmailField(blank=True,null=True)
@@ -253,11 +243,45 @@ class Task(models.Model):
     task = models.TextField()
     taskDueDate = models.CharField(max_length=50)
     taskStatus = models.CharField(max_length=20)
-    taskAssignedTo = models.CharField(max_length=50)
-    taskDepartment = models.CharField(max_length=50)
+    taskAssignedTo = models.EmailField(default='machayoephraim@gmail.com')
     taskAppointmentId = models.ForeignKey(Appointments, related_name='taskAppointmentId',null=True,blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.taskName
+
+#HR
+class HumanResource (models.Model): 
+    ROLES = [
+        ('Admin', 'Admin'),
+
+        ('Doctor', 'Doctor'),
+        ('Psychologist', 'Psychologist'),
+        ('Nutritionist', 'Nutritionist'),
+        ('Care Manager', 'Care Manager'),
+        ('Engagement Lead', 'Engagement Lead'),
+    ]
+
+    STATUS = [
+        ('Active', 'Active'),
+        ('Inactive', 'Inactive'),
+        ('On Leave', 'On Leave'),
+    ]
+
+    created = models.DateTimeField(auto_now_add=True)
+    HRTasks = models.IntegerField(default = 0)
+    HREmail = models.EmailField()
+    HRRole = models.CharField(max_length=50,choices=ROLES,default='Care Manager')
+    HRStatus = models.CharField(max_length=50,choices=STATUS,default='Active')
+    # TaskId = models.ManyToManyField(Task, related_name='TaskId',blank=True)
+
+
+    def __str__(self):
+        return self.HREmail
+
     
+# class Whatsapp(models.Model):
+#     created = models.DateTimeField(auto_now_add=True)
+#     memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+#     sentBy = models.EmailField()
+#     Message = models.TextField()
     

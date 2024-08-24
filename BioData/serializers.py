@@ -328,7 +328,7 @@ class MemberJourneySerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id','memberId', 'taskName', 'taskDueDate', 'taskStatus', 'taskDepartment', 'taskAssignedTo','task','taskAppointmentId']
+        fields = ['id','memberId', 'taskName', 'taskDueDate', 'taskStatus', 'taskAssignedTo','task','taskAppointmentId']
         
         def create(self, validated_data):
             return Task.objects.create(**validated_data)
@@ -336,7 +336,6 @@ class TaskSerializer(serializers.ModelSerializer):
         def update(self, instance, validated_data):
             instance.taskDueDate = validated_data.get('taskDueDate', instance.taskDueDate)
             instance.taskStatus = validated_data.get('taskStatus', instance.taskStatus)
-            instance.taskDepartment = validated_data.get('taskDepartment', instance.taskDepartment)
             instance.taskAssignedTo = validated_data.get('taskAssignedTo', instance.taskAssignedTo)
             instance.taskName = validated_data.get('taskName',instance.taskName)
             instance.task = validated_data.get('task', instance.task)
@@ -347,7 +346,11 @@ class TaskSerializer(serializers.ModelSerializer):
 class HrSerializer(serializers.ModelSerializer):
     class Meta:
         model = HumanResource
-        fields = '__all__'
+        fields = ['id','HRTasks','HRRole','HRStatus','HREmail']
+
+    def create(self, validated_data):
+        return HumanResource.objects.create(**validated_data)
+
 
 class AppointmentsSerializer(serializers.ModelSerializer):
     class Meta:
