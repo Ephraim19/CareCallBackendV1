@@ -96,7 +96,7 @@ urlpatterns = [
     path('member/analytics/rbs/', views.MemberAnalyticsRbs),
     path('appointment/analytics/', views.AppointmentAnalytics),
 
-    path('send-whatsapp/',  views.SendWhatsAppMessage.as_view(), name='send_whatsapp'),
+    # path('send-whatsapp/',  views.SendWhatsAppMessage.as_view(), name='send_whatsapp'),
     
     path("hr/",views.HR.as_view())
 

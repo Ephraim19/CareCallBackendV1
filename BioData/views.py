@@ -8,8 +8,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .MyFunctions import MemberMoM
 import calendar
-import requests
-import json
 
 class SearchMember(APIView):
 
@@ -1245,52 +1243,46 @@ class HR(generics.ListAPIView):
         
 
 
-# import requests
-# from django.conf import settings
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
+# class SendWhatsAppMessage(APIView):
 
-class SendWhatsAppMessage(APIView):
+#     def post(self, request, *args, **kwargs):
+#         # Extract the phone number and message from the request data
+#         # phone_number = request.data.get('phone_number')
+#         # message_text = request.data.get('message')
+#         phone_number = '+254705018725'
+#         message_text = 'Share your health data with us'
 
-    def post(self, request, *args, **kwargs):
-        # Extract the phone number and message from the request data
-        # phone_number = request.data.get('phone_number')
-        # message_text = request.data.get('message')
-        phone_number = '+254705018725'
-        message_text = 'Share your health data with us'
+#         ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
+#         PHONE_NUMBER_ID = '391848354014987'
 
-        ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
-        PHONE_NUMBER_ID = '391848354014987'
+#         if not phone_number or not message_text:
+#             return Response(
+#                 {"error": "phone_number and message are required."},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
 
-        if not phone_number or not message_text:
-            return Response(
-                {"error": "phone_number and message are required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+#         url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
+#         headers = {
+#             'Authorization': f'Bearer {ACCESS_TOKEN}',
+#             'Content-Type': 'application/json'
+#         }
 
-        url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
-        headers = {
-            'Authorization': f'Bearer {ACCESS_TOKEN}',
-            'Content-Type': 'application/json'
-        }
+#         payload = {
+#             "messaging_product": "whatsapp",
+#             "to": phone_number,
+#             "type": "text",
+#             "text": {
+#                 "body": message_text
+#             }
+#         }
 
-        payload = {
-            "messaging_product": "whatsapp",
-            "to": phone_number,
-            "type": "text",
-            "text": {
-                "body": message_text
-            }
-        }
+#         response = requests.post(url, json=payload, headers=headers)
 
-        response = requests.post(url, json=payload, headers=headers)
-
-        if response.status_code == 200:
-            return Response({"success": "Message sent successfully"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Failed to send message", "details": response.json()},
-                            status=response.status_code)
+#         if response.status_code == 200:
+#             return Response({"success": "Message sent successfully"}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"error": "Failed to send message", "details": response.json()},
+#                             status=response.status_code)
 
 
         # print(request.data)
