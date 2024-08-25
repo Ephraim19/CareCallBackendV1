@@ -35,6 +35,7 @@ urlpatterns = [
     path('interaction/', views.InteractionList.as_view() ),
     path('interaction/<int:pk>/', views.InteractionDetail.as_view() ),
     path('interaction/post/', views.InteractionPost.as_view() ),
+    path('interaction/analytics/', views.InteractionAnalytics.as_view() ),
 
     path('bloodpressure/', views.BloodPressureList.as_view() ),
     path('bloodpressure/<int:pk>/', views.BloodPressureDetail.as_view() ),
@@ -81,6 +82,7 @@ urlpatterns = [
     path('task/', views.TaskList.as_view() ),
     path('task/post/', views.TaskListPost.as_view() ),
     path('task/<int:pk>/', views.TaskDetail.as_view() ),
+    path('mytasks/', views.MyTasks.as_view() ),
 
     path('appointment/', views.AppointmentsList.as_view() ),
     path('appointment/post/', views. AppointmentsPost.as_view() ),

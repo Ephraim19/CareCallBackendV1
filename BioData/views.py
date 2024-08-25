@@ -150,11 +150,49 @@ class InteractionList(generics.ListAPIView):
         if member_id is not None:
             return InteractionLog.objects.filter(memberId=member_id)
         else:
-            return InteractionLog.objects.all()  
+            return InteractionLog.objects.none()
     
 class InteractionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InteractionLog.objects.all()
     serializer_class = InteractionSerializer
+
+#INTERACTION ANALYTICS
+class InteractionAnalytics(APIView):
+    serialiazer_class = InteractionSerializer
+
+    def get(self, request, *args, **kwargs):
+        interactions = {}
+        allInteractions = InteractionLog.objects.all()
+
+        total = []
+        total = allInteractions.count()
+        interactions['total'] = total
+
+        SMS = []
+        SMS = allInteractions.filter(channel = "SMS").count()
+        interactions['SMS'] = SMS
+
+        Phone = []
+        Phone = allInteractions.filter(channel = "Phone call").count()
+        interactions['Phone'] = Phone
+
+        Email = []
+        Email = allInteractions.filter(channel = "Email").count()
+        interactions['Email'] = Email
+
+        WhatsApp = []
+        WhatsApp = allInteractions.filter(channel = "WhatsApp").count()
+        interactions['WhatsApp'] = WhatsApp
+
+        Outbound = []
+        Outbound = allInteractions.filter(channelDirection = "Outbound").count()
+        interactions['Outbound'] = Outbound
+
+        Inbound = []
+        Inbound = allInteractions.filter(channelDirection = "Inbound").count()
+        interactions['Inbound'] = Inbound
+        return Response([interactions])
+        
 
 #BLOOD PRESSURE
 class BloodPressureList(generics.ListAPIView):
@@ -920,8 +958,12 @@ def TasksAnalytics(request):
         TaskObject = {}
 
         allTasks = Task.objects.all()
-        #All tasks len
+        #All tasks 
         TaskObject['total'] = len(allTasks)
+        TaskObject['complete'] = len(allTasks.filter(taskStatus="complete"))
+        TaskObject['cancelled'] = len(allTasks.filter(taskStatus="cancelled"))
+        TaskObject['in_progress1'] = len(allTasks.filter(taskStatus="Inprogress"))
+        TaskObject['not_started1'] = len(allTasks.filter(taskStatus="Not started"))
 
         #BLOOD PRESSURE
         high_bp_tasks = allTasks.filter(taskName="Hypertension Follow up")
@@ -1241,7 +1283,19 @@ class HR(generics.ListAPIView):
     serializer_class = HrSerializer
 
         
+class MyTasks(generics.ListAPIView):
+    serializer_class = TaskSerializer
 
+    def get_queryset(self):
+        """
+        This view returns a list of all the tasks assigned to the HR
+        """
+        hr_email = self.request.query_params.get('hr_email', None)
+        if hr_email is not None:
+            return Task.objects.filter(taskAssignedTo=hr_email)
+        else:
+            return Task.objects.none()
+        
 
 # class SendWhatsAppMessage(APIView):
 
