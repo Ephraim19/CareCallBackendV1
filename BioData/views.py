@@ -1,5 +1,5 @@
-from .models import Member,Task,Dependant,memberTaskBase,Appointments,Condition,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,NewMemberSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Task,Dependant,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,NewMemberSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
@@ -1304,14 +1304,25 @@ class MyTasks(generics.ListAPIView):
         else:
             return Task.objects.none()
         
+class send_whatsapp_message(generics.CreateAPIView):
+ serializer_class =  WhatsappSerializer
 
+# @csrf_exempt
+ def perform_create(self,serializer):
+    
+    #GET MEMBER ID
+    member_id = self.request.data.get('memberId',None)
+    message_body = self.request.data.get('message',None)
+    member = Member.objects.get(id=member_id)
+    phone = '+254' + str(member.memberPhone)
+    serializer.save(messageTo = '254' + str(member.memberPhone))
+    print(phone)
+    print(message_body)
 
-def send_whatsapp_message(request):
     # Access token and phone number ID should be stored in environment variables
     phone_number_id = '391848354014987'
-
-    recipient_number = '+254705018725'
-    message_body = "Hello!  We hope you're doing well. How are you feeling today? We'd love to ensure your health records are up-to-date. Would you like to share any updates regarding your health or wellbeing? Please let us know if there's anything you'd like to change or add. Your wellbeing is our priority!"
+    recipient_number = phone
+    # message_body = "Hello!  We hope you're doing well. How are you feeling today? We'd love to ensure your health records are up-to-date. Would you like to share any updates regarding your health or wellbeing? Please let us know if there's anything you'd like to change or add. Your wellbeing is our priority!"
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -1329,12 +1340,13 @@ def send_whatsapp_message(request):
 
     try:
         response = requests.post(url, headers=headers, json=payload)
-        print(response.status_code)
         response.raise_for_status()  # Will raise an error for 4xx/5xx responses
 
         if response.status_code == 200:
+            print('success')
             return JsonResponse({"status": "success", "message": "Message sent successfully"})
         else:
+            print('error')
             return JsonResponse({"status": "error", "message": response.text}, status=response.status_code)
 
     except requests.exceptions.RequestException as e:
@@ -1343,6 +1355,7 @@ def send_whatsapp_message(request):
     
 
 
+@csrf_exempt
 def whatsapp_webhook(request):
     if request.method == 'GET':
         # Verify token from Facebook Developer Console
@@ -1365,6 +1378,17 @@ def whatsapp_webhook(request):
         # Handle the data as needed
         # You can log it, save it to the database, or process it further
         print(data)  # Example: logging the data
+        display_phone_number = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
+        contact_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
+        contact_wa_id = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
+        message_from = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
+        message_timestamp = data['entry'][0]['changes'][0]['value']['messages'][0]['timestamp']
+        message_body = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+        message_type = data['entry'][0]['changes'][0]['value']['messages'][0]['type']
+
+            #Statu update
+        message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
+        message_timestamp1 = data['entry'][0]['changes'][0]['value']['statuses'][0]['timestamp']
 
         return JsonResponse({'status': 'success'}, status=200)
     

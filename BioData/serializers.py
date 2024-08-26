@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Task,Dependant,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Whatsapp,Task,Dependant,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -399,6 +399,15 @@ class NewMemberSerializer(serializers.ModelSerializer):
             instance.memerEmail = validated_data.get('memerEmail', instance.memerEmail)
             instance.save()
             return instance
+        
+class WhatsappSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Whatsapp
+        fields = '__all__'
+
+        def create(self, validated_data):
+            return Whatsapp.objects.create(**validated_data)
+        
 
 class MemberSerializer (serializers.ModelSerializer):
     dependants = DependantSerializer(many=True, read_only=False)

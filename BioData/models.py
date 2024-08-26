@@ -278,10 +278,31 @@ class HumanResource (models.Model):
     def __str__(self):
         return self.HREmail
 
+class Whatsapp(models.Model):
+    STATUS = [
+        ('Sent', 'Sent'),
+        ('Delivered', 'Delivered'),
+        ('Read', 'Read'),
+    ]
+    DIRECTION = [
+        ('Inbound', 'Inbound'),
+        ('Outbound', 'Outbound'),
+    ]
+
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    message = models.TextField()
+    # messageDate = models.CharField(max_length=50,blank=True,null=True)
+    messageStatus = models.CharField(max_length=50,choices=STATUS,default='Sent')
+    messageFrom = models.EmailField()
+    messageTo = models.CharField(max_length = 20)
     
-# class Whatsapp(models.Model):
-#     created = models.DateTimeField(auto_now_add=True)
-#     memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
-#     sentBy = models.EmailField()
-#     Message = models.TextField()
+    messageDirection = models.CharField(max_length=50,choices=DIRECTION)
+    # messageResponse = models.TextField(blank=True,null=True)
+    # messageResponseDate = models.CharField(max_length=50,blank=True,null=True)
+
+
+    
+    def __str__(self):
+        return self.message
     
