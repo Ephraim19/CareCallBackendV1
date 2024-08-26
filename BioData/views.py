@@ -8,11 +8,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .MyFunctions import MemberMoM
 import calendar
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.db.models import Count
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
+
+access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
 
 class SearchMember(APIView):
 
@@ -1306,11 +1308,10 @@ class MyTasks(generics.ListAPIView):
 
 def send_whatsapp_message(request):
     # Access token and phone number ID should be stored in environment variables
-    access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
     phone_number_id = '391848354014987'
 
     recipient_number = '+254705018725'
-    message_body = "Hello there from carecall!"
+    message_body = "Hello!  We hope you're doing well. How are you feeling today? We'd love to ensure your health records are up-to-date. Would you like to share any updates regarding your health or wellbeing? Please let us know if there's anything you'd like to change or add. Your wellbeing is our priority!"
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -1339,37 +1340,32 @@ def send_whatsapp_message(request):
     except requests.exceptions.RequestException as e:
         # This will catch all exceptions, such as connectivity issues or invalid responses
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    
 
-@csrf_exempt
+
 def whatsapp_webhook(request):
     if request.method == 'GET':
-        # Verification request from WhatsApp
-        access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
+        # Verify token from Facebook Developer Console
+        verify_token = 'ephraim'
 
-        verify_token = access_token  # The token you set on WhatsApp's webhook configuration
+        # Get token from the request
         mode = request.GET.get('hub.mode')
         token = request.GET.get('hub.verify_token')
         challenge = request.GET.get('hub.challenge')
 
+        # Check if token matches
         if mode == 'subscribe' and token == verify_token:
-            return JsonResponse({"hub.challenge": challenge}, safe=False)
+            return HttpResponse(challenge)
         else:
-            return JsonResponse({"error": "Invalid token"}, status=403)
+            return HttpResponse('Verification token mismatch', status=403)
 
     elif request.method == 'POST':
-        # Handle the incoming WhatsApp messages
-        payload = json.loads(request.body.decode('utf-8'))
-        print("Received payload:", json.dumps(payload, indent=2))  # Debugging: Print the payload
+        # Process the incoming data from WhatsApp
+        data = json.loads(request.body.decode('utf-8'))
+        # Handle the data as needed
+        # You can log it, save it to the database, or process it further
+        print(data)  # Example: logging the data
 
-        # Process the payload (e.g., save to database, trigger actions, etc.)
-        # Example: Log the incoming message text
-        for entry in payload.get("entry", []):
-            for change in entry.get("changes", []):
-                if change.get("field") == "messages":
-                    for message in change.get("value", {}).get("messages", []):
-                        print("Message received:", message.get("text", {}).get("body"))
-
-        return JsonResponse({"status": "success"}, status=200)
-
-    else:
-        return JsonResponse({"error": "Invalid request method"}, status=405)
+        return JsonResponse({'status': 'success'}, status=200)
+    
+    return JsonResponse({'status': 'method not allowed'}, status=405)
