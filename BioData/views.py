@@ -8,6 +8,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .MyFunctions import MemberMoM
 import calendar
+from django.http import JsonResponse
+from django.db.models import Count
+import requests
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 class SearchMember(APIView):
 
@@ -1231,6 +1236,7 @@ class AppointmentsPost(generics.CreateAPIView):
             taskAppointmentId = appointment
         )
 
+        return Response(serializer.data)
 
 class AppointmentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Appointments.objects.all()
@@ -1297,83 +1303,73 @@ class MyTasks(generics.ListAPIView):
             return Task.objects.none()
         
 
-# class SendWhatsAppMessage(APIView):
 
-#     def post(self, request, *args, **kwargs):
-#         # Extract the phone number and message from the request data
-#         # phone_number = request.data.get('phone_number')
-#         # message_text = request.data.get('message')
-#         phone_number = '+254705018725'
-#         message_text = 'Share your health data with us'
+def send_whatsapp_message(request):
+    # Access token and phone number ID should be stored in environment variables
+    access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
+    phone_number_id = '391848354014987'
 
-#         ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
-#         PHONE_NUMBER_ID = '391848354014987'
+    recipient_number = '+254705018725'
+    message_body = "Hello there from carecall!"
 
-#         if not phone_number or not message_text:
-#             return Response(
-#                 {"error": "phone_number and message are required."},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+    }
 
-#         url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
-#         headers = {
-#             'Authorization': f'Bearer {ACCESS_TOKEN}',
-#             'Content-Type': 'application/json'
-#         }
+    url = f"https://graph.facebook.com/v13.0/{phone_number_id}/messages"
 
-#         payload = {
-#             "messaging_product": "whatsapp",
-#             "to": phone_number,
-#             "type": "text",
-#             "text": {
-#                 "body": message_text
-#             }
-#         }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": recipient_number,
+        "type": "text",
+        "text": {"body": message_body}
+    }
 
-#         response = requests.post(url, json=payload, headers=headers)
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        print(response.status_code)
+        response.raise_for_status()  # Will raise an error for 4xx/5xx responses
 
-#         if response.status_code == 200:
-#             return Response({"success": "Message sent successfully"}, status=status.HTTP_200_OK)
-#         else:
-#             return Response({"error": "Failed to send message", "details": response.json()},
-#                             status=response.status_code)
+        if response.status_code == 200:
+            return JsonResponse({"status": "success", "message": "Message sent successfully"})
+        else:
+            return JsonResponse({"status": "error", "message": response.text}, status=response.status_code)
 
+    except requests.exceptions.RequestException as e:
+        # This will catch all exceptions, such as connectivity issues or invalid responses
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
-        # print(request.data)
-        # # Replace these with your actual credentials and details
-        # ACCESS_TOKEN = 'EAAEqkG7cBtQBOzPZC0SRPVn3aawFlLgE3GaY49DLP8Ag6aUcS0PZA7SGY7ZBWir18yVBSTTvvfB4c0q1xZBYYGNgZA2057vLtOPgyywDZBZAnUFWtP79W9eYlWsqDS7ZBqocH1SOOj63GYtL38UyDxgzF8VDlZCH3waef0tcS2fCIkZBTNoZCSiiEFZAtTmnwCJcqNMxo2Nu0xDJ7etZAjSNZCFLcZD'
-        # PHONE_NUMBER_ID = '391848354014987'
-        
-        # # Get the recipient phone number and message from the request data
+@csrf_exempt
+def whatsapp_webhook(request):
+    if request.method == 'GET':
+        # Verification request from WhatsApp
+        access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
 
-        # # recipient_number = request.data.get('recipient_number')
-        # # message_content = request.data.get('message')
+        verify_token = access_token  # The token you set on WhatsApp's webhook configuration
+        mode = request.GET.get('hub.mode')
+        token = request.GET.get('hub.verify_token')
+        challenge = request.GET.get('hub.challenge')
 
-        # message_content = "Hello, this is a test message from the WhatsApp API"
-        # recipient_number =  "+254705018725"
+        if mode == 'subscribe' and token == verify_token:
+            return JsonResponse({"hub.challenge": challenge}, safe=False)
+        else:
+            return JsonResponse({"error": "Invalid token"}, status=403)
 
+    elif request.method == 'POST':
+        # Handle the incoming WhatsApp messages
+        payload = json.loads(request.body.decode('utf-8'))
+        print("Received payload:", json.dumps(payload, indent=2))  # Debugging: Print the payload
 
-        # if not recipient_number or not message_content:
-        #     return Response({"error": "Recipient number and message are required"}, status=status.HTTP_400_BAD_REQUEST)
+        # Process the payload (e.g., save to database, trigger actions, etc.)
+        # Example: Log the incoming message text
+        for entry in payload.get("entry", []):
+            for change in entry.get("changes", []):
+                if change.get("field") == "messages":
+                    for message in change.get("value", {}).get("messages", []):
+                        print("Message received:", message.get("text", {}).get("body"))
 
-        # url = f'https://graph.facebook.com/v13.0/{PHONE_NUMBER_ID}/messages'
+        return JsonResponse({"status": "success"}, status=200)
 
-        # headers = {
-        #     'Authorization': f'Bearer {ACCESS_TOKEN}',
-        #     'Content-Type': 'application/json'
-        # }
-
-        # data =json.stringify({
-        #     'messaging_product': 'whatsapp',
-        #     'to': recipient_number,
-        #     'type': 'text',
-        #     'text': {'body': message_content}
-        # })
-
-        # # try:
-        # requests.post(url, headers=headers, data=json.dumps(data))
-        #     # response.raise_for_status()  # Raises an HTTPError for bad responses
-        #     # return Response(response.json(), status=status.HTTP_200_OK)
-        # # except requests.exceptions.RequestException as e:
-        # #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
