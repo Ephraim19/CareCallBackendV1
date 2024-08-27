@@ -1403,10 +1403,11 @@ def whatsapp_webhook(request):
         print('saving') 
         print(" ")
 
-        print(int(data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][2:]))
+        member = (int(data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][3:]))
+
         if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
             Whatsapp.objects.create(
-            memberId = Member.objects.get(membePhone = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][2:]),
+            memberId = Member.objects.get(membePhone = member),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
