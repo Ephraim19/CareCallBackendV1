@@ -1402,23 +1402,15 @@ def whatsapp_webhook(request):
             # member = Member.objects.get(memberPhone = messageFrom[2:])
         print('saving') 
         print(" ")
-
-        member = (int(data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][3:]))
-        print(member)
-        print(Member.objects.filter(memberPhone = member))
-        print(Member.objects.get(memberPhone = member))
-
-        if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
-
-            Whatsapp.objects.create(
-            memberId = Member.objects.filter(memberPhone = member),
+        # if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
+        Whatsapp.objects.create(
+            memberId = Member.objects.get(id=26),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
-            messageDirection = 'Inbound',
-           )
-            
+            messageDirection = 'Inbound'
+        )
         print('saved') 
         print(" ")
         return JsonResponse({'status': 'success'}, status=200)
