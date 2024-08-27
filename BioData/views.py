@@ -1445,8 +1445,6 @@ class Whatsapp_Webhook(APIView):
         )
         print('saved')
         print(" ")
-
-        mbr_wdata = Whatsapp.objects.filter(memberId=27)
         
-        return  mbr_wdata
+        return Whatsapp.objects.filter(memberId=27)
     
