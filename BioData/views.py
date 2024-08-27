@@ -1411,7 +1411,6 @@ class getWhatsapp(generics.ListAPIView):
     
 #     return JsonResponse({'status': 'method not allowed'}, status=405)
 
-@csrf_exempt
 class Whatsapp_Webhook(APIView):
 
     def get(self, request):
