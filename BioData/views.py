@@ -1383,13 +1383,16 @@ def whatsapp_webhook(request):
 
         print(data) 
         print(" ")
-        print(" ")
 
         try:
             messageStatus = data.entry[0].changes[0].value.statuses[0].status
             messageDirection = 'Outbound'
 
         except Exception as e:
+            print('Inbound to the system')
+            print(" ")
+        
+        finally:
             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
@@ -1406,21 +1409,8 @@ def whatsapp_webhook(request):
             messageTo = messageTo,
             messageDirection = messageDirection
             )
-
         
-        # if (messageDirection == 'Inbound'):
-        #     Whatsapp.objects.create(
-        #     memberId = member,
-        #     message = message,
-        #     messageStatus = messageStatus,
-        #     messageFrom = messageFrom,
-        #     messageTo = messageTo,
-        #     messageDirection = messageDirection
-        #     )
-        # else:
-        #     print('Outbound message')
-        #     print(messageStatus)
-
         return JsonResponse({'status': 'success'}, status=200)
+
     
     return JsonResponse({'status': 'method not allowed'}, status=405)
