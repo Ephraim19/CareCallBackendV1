@@ -1374,6 +1374,7 @@ class getWhatsapp(generics.ListAPIView):
 @csrf_exempt
 def whatsapp_webhook(request):
     if request.method == 'GET':
+        getWhatsapp.get_queryset()
         # Verify token from Facebook Developer Console
         verify_token = 'ephraim'
 
@@ -1394,22 +1395,6 @@ def whatsapp_webhook(request):
         print(data) 
         print(" ")
 
-        # try:
-        #     messageStatus = data.entry[0].changes[0].value.statuses[0].status
-        #     messageDirection = 'Outbound'
-
-        # except Exception as e:
-        #     print('Inbound to the system')
-        #     print(" ")
-        
-        # finally:
-            # messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
-            # messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
-            # message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-            # messageStatus = 'received'
-            # messageDirection = 'Inbound'
-            # message_id = data['entry'][0]['changes'][0]['value']['messages'][0]['id']
-            # member = Member.objects.get(memberPhone = messageFrom[2:])
         print('saving') 
         print(" ")
         Whatsapp.objects.create(
