@@ -1371,12 +1371,52 @@ class getWhatsapp(generics.ListAPIView):
         else:
             return Whatsapp.objects.none()
 
+# @csrf_exempt
+# def whatsapp_webhook(request):
+#     if request.method == 'GET':
+#         # Verify token from Facebook Developer Console
+#         verify_token = 'ephraim'
+
+#         # Get token from the request
+#         mode = request.GET.get('hub.mode')
+#         token = request.GET.get('hub.verify_token')
+#         challenge = request.GET.get('hub.challenge')
+
+#         # Check if token matches
+#         if mode == 'subscribe' and token == verify_token:
+#             return HttpResponse(challenge)
+#         else:
+#             return HttpResponse('Verification token mismatch', status=403)
+
+#     elif request.method == 'POST':
+#         data = json.loads(request.body.decode('utf-8'))
+
+#         print(data) 
+#         print(" ")
+
+#         print('saving') 
+#         print(" ")
+#         Whatsapp.objects.create(
+#             memberId = Member.objects.get(id=27),
+#             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
+#             messageStatus = 'received',
+#             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
+#             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
+#             messageDirection = 'Inbound'
+#         )
+#         print('saved') 
+#         print(" ")
+#         return JsonResponse({'status': 'success'}, status=200)
+
+    
+#     return JsonResponse({'status': 'method not allowed'}, status=405)
+
 @csrf_exempt
-def whatsapp_webhook(request):
-    if request.method == 'GET':
+class Whatsapp_Webhook(APIView):
+
+    def get(self, request):
         # Verify token from Facebook Developer Console
         verify_token = 'ephraim'
-
         # Get token from the request
         mode = request.GET.get('hub.mode')
         token = request.GET.get('hub.verify_token')
@@ -1388,7 +1428,7 @@ def whatsapp_webhook(request):
         else:
             return HttpResponse('Verification token mismatch', status=403)
 
-    elif request.method == 'POST':
+    def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
 
         print(data) 
@@ -1404,9 +1444,8 @@ def whatsapp_webhook(request):
             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
             messageDirection = 'Inbound'
         )
-        print('saved') 
+        print('saved')
         print(" ")
+        
         return JsonResponse({'status': 'success'}, status=200)
-
     
-    return JsonResponse({'status': 'method not allowed'}, status=405)
