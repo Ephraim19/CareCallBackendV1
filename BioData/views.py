@@ -1406,9 +1406,7 @@ def whatsapp_webhook(request):
         )
         print('saved') 
         print(" ")
-        AA1 = Whatsapp.objects.filter(memberId=27)
-        print(AA1)
-        return request(AA1)
+        return JsonResponse({'status': 'success'}, status=200)
 
     
     return JsonResponse({'status': 'method not allowed'}, status=405)
