@@ -1361,6 +1361,16 @@ def get_queryset(self):
     else:
         return Whatsapp.objects.none()
 
+class getWhatsapp(generics.ListAPIView):
+    serializer_class = WhatsappSerializer
+
+    def get_queryset(self):
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Whatsapp.objects.filter(memberId=member_id)
+        else:
+            return Whatsapp.objects.none()
+
 @csrf_exempt
 def whatsapp_webhook(request):
     if request.method == 'GET':
@@ -1402,15 +1412,14 @@ def whatsapp_webhook(request):
             # member = Member.objects.get(memberPhone = messageFrom[2:])
         print('saving') 
         print(" ")
-        if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
-            Whatsapp.objects.create(
+        Whatsapp.objects.create(
             memberId = Member.objects.get(id=26),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
             messageDirection = 'Inbound'
-    )
+        )
         print('saved') 
         print(" ")
         return JsonResponse({'status': 'success'}, status=200)
