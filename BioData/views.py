@@ -1404,12 +1404,12 @@ def whatsapp_webhook(request):
         print(" ")
         if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
             Whatsapp.objects.create(
-            memberId = Member.objects.get(id=26),
+            memberId = Member.objects.get(membePhone = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][2:]),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
-            messageDirection = 'Inbound'
+            messageDirection = 'Inbound',
            )
         print('saved') 
         print(" ")
