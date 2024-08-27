@@ -1446,5 +1446,5 @@ class Whatsapp_Webhook(APIView):
         print('saved')
         print(" ")
         
-        return Whatsapp.objects.filter(memberId=27)
+        return JsonResponse({'status': 'success'}, status=200)
     
