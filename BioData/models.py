@@ -294,9 +294,9 @@ class Whatsapp(models.Model):
     message = models.TextField()
     # messageDate = models.CharField(max_length=50,blank=True,null=True)
     messageStatus = models.CharField(max_length=50,choices=STATUS,default='Sent')
-    messageFrom = models.EmailField()
+    messageFrom = models.EmailField(null=True,blank=True)
     messageTo = models.CharField(max_length = 20)
-    
+
     messageDirection = models.CharField(max_length=50,choices=DIRECTION)
     # messageResponse = models.TextField(blank=True,null=True)
     # messageResponseDate = models.CharField(max_length=50,blank=True,null=True)

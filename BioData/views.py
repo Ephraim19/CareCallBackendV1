@@ -1304,8 +1304,9 @@ class MyTasks(generics.ListAPIView):
         else:
             return Task.objects.none()
         
-class send_whatsapp_message(generics.CreateAPIView):
+class send_whatsapp_message(generics.ListCreateAPIView):
  serializer_class =  WhatsappSerializer
+ queryset = Whatsapp.objects.all()
 
 # @csrf_exempt
  def perform_create(self,serializer):
@@ -1353,7 +1354,12 @@ class send_whatsapp_message(generics.CreateAPIView):
         # This will catch all exceptions, such as connectivity issues or invalid responses
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
     
-
+def get_queryset(self):
+    member_id = self.request.query_params.get('memberId', None)
+    if member_id is not None:
+        return Whatsapp.objects.filter(memberId=member_id)
+    else:
+        return Whatsapp.objects.none()
 
 @csrf_exempt
 def whatsapp_webhook(request):
@@ -1373,11 +1379,11 @@ def whatsapp_webhook(request):
             return HttpResponse('Verification token mismatch', status=403)
 
     elif request.method == 'POST':
-        # Process the incoming data from WhatsApp
         data = json.loads(request.body.decode('utf-8'))
-        # Handle the data as needed
-        # You can log it, save it to the database, or process it further
-        print(data)  # Example: logging the data
+
+        print(data) 
+
+
         display_phone_number = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
         contact_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
         contact_wa_id = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
@@ -1389,6 +1395,22 @@ def whatsapp_webhook(request):
             #Statu update
         message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
         message_timestamp1 = data['entry'][0]['changes'][0]['value']['statuses'][0]['timestamp']
+
+        message  = message_body
+        messageStatus = message_status
+        messageFrom = message_from 
+        messageTo = display_phone_number
+        messageDirection = 'Inbound'
+        member = Member.objects.get(memberPhone = message_from[2:])
+
+        Whatsapp.objects.create(
+            memberId = member,
+            message = message,
+            messageStatus = messageStatus,
+            messageFrom = messageFrom,
+            messageTo = display_phone_number,
+            messageDirection = messageDirection
+        )
 
         return JsonResponse({'status': 'success'}, status=200)
     
