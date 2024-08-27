@@ -1374,7 +1374,6 @@ class getWhatsapp(generics.ListAPIView):
 @csrf_exempt
 def whatsapp_webhook(request):
     if request.method == 'GET':
-        getWhatsapp.get_queryset()
         # Verify token from Facebook Developer Console
         verify_token = 'ephraim'
 
@@ -1407,7 +1406,9 @@ def whatsapp_webhook(request):
         )
         print('saved') 
         print(" ")
-        return JsonResponse({'status': 'success'}, status=200)
+        AA1 = Whatsapp.objects.filter(memberId=27)
+        print(AA1)
+        return request(AA1)
 
     
     return JsonResponse({'status': 'method not allowed'}, status=405)
