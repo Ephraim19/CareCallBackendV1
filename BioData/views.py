@@ -1407,7 +1407,7 @@ def whatsapp_webhook(request):
 
         if (data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'] is not None):
             Whatsapp.objects.create(
-            memberId = Member.objects.get(membePhone = member),
+            memberId = Member.objects.get(memberPhone = member),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
