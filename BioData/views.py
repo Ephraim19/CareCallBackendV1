@@ -1385,20 +1385,19 @@ def whatsapp_webhook(request):
         print(" ")
         print(" ")
 
-        messageTo = data.entry[0].changes[0].value.metadata.display_phone_number
-        messageFrom = data.entry[0].changes[0].value.contacts[0].wa_id
-        message = data.entry[0].changes[0].value.messages[0].text.body
-        member = Member.objects.get(memberPhone = messageFrom[2:])
-
         try:
             messageStatus = data.entry[0].changes[0].value.statuses[0].status
             messageDirection = 'Outbound'
+
         except Exception as e:
+            messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
+            messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
+            message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
             messageStatus = 'received'
             messageDirection = 'Inbound'
+            message_id = data['entry'][0]['changes'][0]['value']['messages'][0]['id']
+            member = Member.objects.get(memberPhone = messageFrom[2:])
 
-        
-        if (messageDirection == 'Inbound'):
             Whatsapp.objects.create(
             memberId = member,
             message = message,
@@ -1407,9 +1406,20 @@ def whatsapp_webhook(request):
             messageTo = messageTo,
             messageDirection = messageDirection
             )
-        else:
-            print('Outbound message')
-            print(messageStatus)
+
+        
+        # if (messageDirection == 'Inbound'):
+        #     Whatsapp.objects.create(
+        #     memberId = member,
+        #     message = message,
+        #     messageStatus = messageStatus,
+        #     messageFrom = messageFrom,
+        #     messageTo = messageTo,
+        #     messageDirection = messageDirection
+        #     )
+        # else:
+        #     print('Outbound message')
+        #     print(messageStatus)
 
         return JsonResponse({'status': 'success'}, status=200)
     
