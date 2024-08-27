@@ -14,7 +14,7 @@ import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-access_token = 'EAAEqkG7cBtQBO50y1VYXyML4KZBKRZAQe2NGaz5MMvXzZC1NXTjtUbhxEn8zvsgqLBTJxzoaLnb8L3fGiZCeARhdrnOgJ2slZAWM9WrkIPsvZCoQNAgcAir8VY7sYY0VZALFXMNZAGCUzRouj3HcQObBAVWJfsouFG0m3LfI5gzyL08frU9Y01ZCBS7fZAar7cD6uLZCZCcWmBTt3p5CH3T1xAUZD'
+access_token = 'EAAEqkG7cBtQBO7ZCb1ZCBoIJpp0uNdccKQY04z4JQhA41QEkvbwStRV0pYAj55aASiZBC9kPJXQpRgZC6ZAAfCNC3Pnid3dvxqHSVgzNY2xrzw707cfz1u0FUIPuOJzhDv8mIOSJHx1UM8PYfLbHbINAdWAjBF1SuCrelytb5CLM7oOgsyvQONfseQZBwjZC0nVIgp3kVIbvHpS6rmomvkZD'
 
 class SearchMember(APIView):
 
@@ -1316,7 +1316,6 @@ class send_whatsapp_message(generics.ListCreateAPIView):
     message_body = self.request.data.get('message',None)
     member = Member.objects.get(id=member_id)
     phone = '+254' + str(member.memberPhone)
-    serializer.save(messageTo = '254' + str(member.memberPhone))
     print(phone)
     print(message_body)
 
@@ -1344,6 +1343,7 @@ class send_whatsapp_message(generics.ListCreateAPIView):
         response.raise_for_status()  # Will raise an error for 4xx/5xx responses
 
         if response.status_code == 200:
+            serializer.save(messageTo = '254' + str(member.memberPhone))
             print('success')
             return JsonResponse({"status": "success", "message": "Message sent successfully"})
         else:
@@ -1393,11 +1393,11 @@ def whatsapp_webhook(request):
         message_type = data['entry'][0]['changes'][0]['value']['messages'][0]['type']
 
             #Statu update
-        message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
+        # message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
         message_timestamp1 = data['entry'][0]['changes'][0]['value']['statuses'][0]['timestamp']
 
         message  = message_body
-        messageStatus = message_status
+        # messageStatus = message_status
         messageFrom = message_from 
         messageTo = display_phone_number
         messageDirection = 'Inbound'
@@ -1406,9 +1406,9 @@ def whatsapp_webhook(request):
         Whatsapp.objects.create(
             memberId = member,
             message = message,
-            messageStatus = messageStatus,
+            # messageStatus = messageStatus,
             messageFrom = messageFrom,
-            messageTo = display_phone_number,
+            messageTo = messageTo,
             messageDirection = messageDirection
         )
 
