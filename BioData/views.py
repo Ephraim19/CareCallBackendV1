@@ -1384,32 +1384,34 @@ def whatsapp_webhook(request):
         print(data) 
         print(" ")
 
-        try:
-            messageStatus = data.entry[0].changes[0].value.statuses[0].status
-            messageDirection = 'Outbound'
+        # try:
+        #     messageStatus = data.entry[0].changes[0].value.statuses[0].status
+        #     messageDirection = 'Outbound'
 
-        except Exception as e:
-            print('Inbound to the system')
-            print(" ")
+        # except Exception as e:
+        #     print('Inbound to the system')
+        #     print(" ")
         
-        finally:
-            messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
-            messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
-            message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-            messageStatus = 'received'
+        # finally:
+            # messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
+            # messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
+            # message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+            # messageStatus = 'received'
+            # messageDirection = 'Inbound'
+            # message_id = data['entry'][0]['changes'][0]['value']['messages'][0]['id']
+            # member = Member.objects.get(memberPhone = messageFrom[2:])
+        print('saving') 
+        print(" ")
+        Whatsapp.objects.create(
+            memberId = Member.objects.get(id=26),
+            message = 'Test save inbound',
+            messageStatus = 'received',
+            messageFrom = '254705018725',
+            messageTo = '155',
             messageDirection = 'Inbound'
-            message_id = data['entry'][0]['changes'][0]['value']['messages'][0]['id']
-            member = Member.objects.get(memberPhone = messageFrom[2:])
-
-            Whatsapp.objects.create(
-            memberId = member,
-            message = message,
-            messageStatus = messageStatus,
-            messageFrom = messageFrom,
-            messageTo = messageTo,
-            messageDirection = messageDirection
-            )
-        
+        )
+        print('saved') 
+        print(" ")
         return JsonResponse({'status': 'success'}, status=200)
 
     
