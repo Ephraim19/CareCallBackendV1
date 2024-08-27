@@ -1404,7 +1404,7 @@ def whatsapp_webhook(request):
         print(" ")
         Whatsapp.objects.create(
             memberId = Member.objects.get(id=26),
-            message = 'Test save inbound',
+            message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = '254705018725',
             messageTo = '155',
