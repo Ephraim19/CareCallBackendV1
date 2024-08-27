@@ -280,10 +280,12 @@ class HumanResource (models.Model):
 
 class Whatsapp(models.Model):
     STATUS = [
-        ('Sent', 'Sent'),
-        ('Delivered', 'Delivered'),
-        ('Read', 'Read'),
+        ('sent', 'sent'),
+        ('delivered', 'delivered'),
+        ('read', 'read'),
+        ('received','received')
     ]
+    
     DIRECTION = [
         ('Inbound', 'Inbound'),
         ('Outbound', 'Outbound'),
