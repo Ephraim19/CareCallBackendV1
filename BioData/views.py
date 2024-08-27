@@ -1383,34 +1383,36 @@ def whatsapp_webhook(request):
 
         print(data) 
         print(" ")
+        print(" ")
 
-        display_phone_number = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
-        contact_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
-        contact_wa_id = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
-        message_from = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
-        message_timestamp = data['entry'][0]['changes'][0]['value']['messages'][0]['timestamp']
-        message_body = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-        message_type = data['entry'][0]['changes'][0]['value']['messages'][0]['type']
 
-            #Statu update
-        # message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
-        message_timestamp1 = data['entry'][0]['changes'][0]['value']['statuses'][0]['timestamp']
+        # display_phone_number = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
+        # # contact_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
+        # contact_wa_id = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
+        # message_from = data['entry'][0]['changes'][0]['value']['messages'][0]['from']
+        # message_timestamp = data['entry'][0]['changes'][0]['value']['messages'][0]['timestamp']
+        # message_body = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+        # message_type = data['entry'][0]['changes'][0]['value']['messages'][0]['type']
 
-        message  = message_body
-        # messageStatus = message_status
-        messageFrom = message_from 
-        messageTo = display_phone_number
-        messageDirection = 'Inbound'
-        member = Member.objects.get(memberPhone = message_from[2:])
+        #     #Statu update
+        # # message_status = data['entry'][0]['changes'][0]['value']['statuses'][0]['status']
+        # message_timestamp1 = data['entry'][0]['changes'][0]['value']['statuses'][0]['timestamp']
 
-        Whatsapp.objects.create(
-            memberId = member,
-            message = message,
-            # messageStatus = messageStatus,
-            messageFrom = messageFrom,
-            messageTo = messageTo,
-            messageDirection = messageDirection
-        )
+        # message  = message_body
+        # # messageStatus = message_status
+        # messageFrom = message_from 
+        # messageTo = display_phone_number
+        # messageDirection = 'Inbound'
+        # member = Member.objects.get(memberPhone = message_from[2:])
+
+        # Whatsapp.objects.create(
+        #     memberId = member,
+        #     message = message,
+        #     # messageStatus = messageStatus,
+        #     messageFrom = messageFrom,
+        #     messageTo = messageTo,
+        #     messageDirection = messageDirection
+        # )
 
         return JsonResponse({'status': 'success'}, status=200)
     
