@@ -100,7 +100,7 @@ urlpatterns = [
 
     path('send-whatsapp/', views.send_whatsapp_message.as_view(), name='send_whatsapp'),
     path('whatsapp/', views.getWhatsapp.as_view(), name='get_whatsapp'),
-    path('webhook/', views.whatsapp_webhook, name='whatsapp_webhook'),
+    path('webhook/', views.Whatsapp_Webhook.as_view(), name='whatsapp_webhook'),
     
     path("hr/",views.HR.as_view())
 
