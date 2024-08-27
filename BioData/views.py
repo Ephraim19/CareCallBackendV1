@@ -1310,7 +1310,7 @@ class send_whatsapp_message(generics.ListCreateAPIView):
 
 # @csrf_exempt
  def perform_create(self,serializer):
-    
+    print('adding message')
     #GET MEMBER ID
     member_id = self.request.data.get('memberId',None)
     message_body = self.request.data.get('message',None)
@@ -1382,7 +1382,7 @@ def whatsapp_webhook(request):
         data = json.loads(request.body.decode('utf-8'))
 
         print(data) 
-
+        print(" ")
 
         display_phone_number = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number']
         contact_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
