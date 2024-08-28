@@ -1390,17 +1390,7 @@ class Whatsapp_Webhook(APIView):
             return HttpResponse('Verification token mismatch', status=403)
 
     def post(self, request):
-        # Get the member
-        Members = Member.objects.all()
         
-        for member in Members:
-            print(request.data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'] [4:])
-
-            if member.memberPhone == request.data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'] [4:]:
-                the_id = member.id
-                print(the_id)
-                break
-
         data = json.loads(request.body.decode('utf-8'))
 
         print(data) 
