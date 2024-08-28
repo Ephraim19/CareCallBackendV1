@@ -1,21 +1,24 @@
 # signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Member,memberTaskBase 
+from .models import Member,memberTaskBase,Whatsapp
 from django.utils.timezone import now, timedelta
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
-@receiver(post_save, sender=Member)
-def create_call_member(sender, instance, created, **kwargs):
-    if created:
-        memberTaskBase.objects.create(
-            memberId=instance,
-            taskDate=now() + timedelta(days=3),  
-            status='Not started',
-            department='Care Manager',  
-            assignedTo='',  
-            notes=''  ,
-            task = 'Call member for welcoming into CareCall'
-        )
+# @receiver(post_save, sender=Whatsapp)
+# def notify_update(sender, instance, created, **kwargs):
+#     channel_layer = get_channel_layer()
+#     message = {
+#         'type': 'chat_message',
+#         'message': f'Entry {instance.pk} in Whatsapp has been {"created" if created else "updated"}.'
+#     }
+    
+#     # Send a message to the WebSocket group
+#     async_to_sync(channel_layer.group_send)(
+#         "your_group_name",  # Replace with your actual group name
+#         message
+#     )
 
 @receiver(post_save, sender=Member)
 def complete_onboarding(sender, instance, created, **kwargs):

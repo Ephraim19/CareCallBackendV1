@@ -13,9 +13,10 @@ from django.db.models import Count
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
-access_token = 'EAAEqkG7cBtQBO7ZCb1ZCBoIJpp0uNdccKQY04z4JQhA41QEkvbwStRV0pYAj55aASiZBC9kPJXQpRgZC6ZAAfCNC3Pnid3dvxqHSVgzNY2xrzw707cfz1u0FUIPuOJzhDv8mIOSJHx1UM8PYfLbHbINAdWAjBF1SuCrelytb5CLM7oOgsyvQONfseQZBwjZC0nVIgp3kVIbvHpS6rmomvkZD'
-
+access_token = 'EAAEqkG7cBtQBO3qrK2ZBlZAlnx7uolxWlbRdrPewBmGnaW4dRDtr63M8HZBsUvrla6oZCpPqRQfdVsJYtvyu1fpCVya1FzUejfeHfZAZAR87lXT7KfZCGnXElCdv71AqCBokUncgxoc3BVGfExJHuwPtzH6tjZBumcvZBHmG5dBLbXVWEDWdX3CYWaiptoiF8HloIDFZAZBhpZAUJTSSPlTAo34ZD'
 class SearchMember(APIView):
 
     def post(self, request, *args, **kwargs):
@@ -211,7 +212,7 @@ class BloodPressureList(generics.ListAPIView):
         if member_id is not None:
             return BloodPressure.objects.filter(memberId=member_id)
         else:
-            return BloodPressure.objects.all() 
+            return BloodPressure.objects.none() 
     
 
     
@@ -1337,9 +1338,11 @@ class send_whatsapp_message(generics.ListCreateAPIView):
         "type": "text",
         "text": {"body": message_body}
     }
-
+    print('eph')
     try:
+        print('eph1')
         response = requests.post(url, headers=headers, json=payload)
+        print(response.status_code)  
         response.raise_for_status()  # Will raise an error for 4xx/5xx responses
 
         if response.status_code == 200:
@@ -1354,12 +1357,6 @@ class send_whatsapp_message(generics.ListCreateAPIView):
         # This will catch all exceptions, such as connectivity issues or invalid responses
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
     
-def get_queryset(self):
-    member_id = self.request.query_params.get('memberId', None)
-    if member_id is not None:
-        return Whatsapp.objects.filter(memberId=member_id)
-    else:
-        return Whatsapp.objects.none()
 
 class getWhatsapp(generics.ListAPIView):
     serializer_class = WhatsappSerializer
@@ -1411,7 +1408,35 @@ class Whatsapp_Webhook(APIView):
             messageDirection = 'Inbound'
         )
         print('saved')
+
+        # Notify WebSocket group of the updated data
+        # channel_layer = get_channel_layer()
+        # async_to_sync(channel_layer.group_send)(
+        #     "your_group_name",
+        #     {
+        #         'type': 'chat_message',
+        #         'message': 'Data has been updated'
+        #     }
+        # )
         print(" ")
         
+        #Save mbr data
+        # clinical_data = ['bp','bs','temperature','height','weight']
+        try:
+            message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
+            if message == '1':
+                print('bp')
+            elif message == '2':
+                print('bs')
+            elif message == '3':
+                print('temperature')
+            elif message == '4':
+                print('height')
+            elif message == '5':
+                print('weight')
+
+        except:
+            message = 'No message'
+
         return JsonResponse({'status': 'success'}, status=200)
     

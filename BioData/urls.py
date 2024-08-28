@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
+from . import consumers
 
 urlpatterns = [
     path('search/', views.SearchMember.as_view()),
@@ -95,6 +96,7 @@ urlpatterns = [
     path('member/analytics/', views.MemberAnalytics),
     path('member/analytics/fbs/', views.MemberAnalyticsFbs),
     path('member/analytics/hba1c/', views.MemberAnalyticsHba1c),
+
     path('member/analytics/rbs/', views.MemberAnalyticsRbs),
     path('appointment/analytics/', views.AppointmentAnalytics),
 
@@ -102,7 +104,8 @@ urlpatterns = [
     path('whatsapp/', views.getWhatsapp.as_view(), name='get_whatsapp'),
     path('webhook/', views.Whatsapp_Webhook.as_view() , name='whatsapp_webhook'),
     
-    path("hr/",views.HR.as_view())
+    path("hr/",views.HR.as_view()),
+    # path('chats/', consumers.YourConsumer.as_asgi()),
 
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

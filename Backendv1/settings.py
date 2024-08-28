@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'BioData',
     'corsheaders',
-    
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Backendv1.wsgi.application'
+# ASGI application
+ASGI_APPLICATION = 'Backendv1.asgi.application'
 
+# Channel Layers (for WebSocket communication)
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # For development, use in-memory layer
+        # For production, consider using Redis
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [('127.0.0.1', 6379)],
+        # },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
