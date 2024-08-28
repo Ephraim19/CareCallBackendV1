@@ -1366,50 +1366,12 @@ class getWhatsapp(generics.ListAPIView):
 
     def get_queryset(self):
         member_id = self.request.query_params.get('memberId', None)
+        print(member_id)
         if member_id is not None:
             return Whatsapp.objects.filter(memberId=member_id)
         else:
             return Whatsapp.objects.none()
 
-# @csrf_exempt
-# def whatsapp_webhook(request):
-#     if request.method == 'GET':
-#         # Verify token from Facebook Developer Console
-#         verify_token = 'ephraim'
-
-#         # Get token from the request
-#         mode = request.GET.get('hub.mode')
-#         token = request.GET.get('hub.verify_token')
-#         challenge = request.GET.get('hub.challenge')
-
-#         # Check if token matches
-#         if mode == 'subscribe' and token == verify_token:
-#             return HttpResponse(challenge)
-#         else:
-#             return HttpResponse('Verification token mismatch', status=403)
-
-#     elif request.method == 'POST':
-#         data = json.loads(request.body.decode('utf-8'))
-
-#         print(data) 
-#         print(" ")
-
-#         print('saving') 
-#         print(" ")
-#         Whatsapp.objects.create(
-#             memberId = Member.objects.get(id=27),
-#             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
-#             messageStatus = 'received',
-#             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
-#             messageTo = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'],
-#             messageDirection = 'Inbound'
-#         )
-#         print('saved') 
-#         print(" ")
-#         return JsonResponse({'status': 'success'}, status=200)
-
-    
-#     return JsonResponse({'status': 'method not allowed'}, status=405)
 
 class Whatsapp_Webhook(APIView):
 
@@ -1428,6 +1390,17 @@ class Whatsapp_Webhook(APIView):
             return HttpResponse('Verification token mismatch', status=403)
 
     def post(self, request):
+        # Get the member
+        Members = Member.objects.all()
+        
+        for member in Members:
+            print(request.data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'] [4:])
+
+            if member.memberPhone == request.data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'] [4:]:
+                the_id = member.id
+                print(the_id)
+                break
+
         data = json.loads(request.body.decode('utf-8'))
 
         print(data) 
