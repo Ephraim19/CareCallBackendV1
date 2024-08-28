@@ -1426,6 +1426,14 @@ class Whatsapp_Webhook(APIView):
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
             if message == '1':
                 print('bp')
+                BloodPressure.objects.create(
+                    memberId = Member.objects.get(id=aa2),
+                    systolic = 120,
+                    diastolic = 80,
+                    readingDate = datetime.now().date(),
+                    updatedBy = 'whatsapp'
+                )
+                
             elif message == '2':
                 print('bs')
             elif message == '3':

@@ -18,6 +18,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'ephraim.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -27,7 +28,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'BioData',
     'corsheaders',
-    'channels',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Backendv1.wsgi.application'
-# ASGI application
 ASGI_APPLICATION = 'Backendv1.asgi.application'
 
 # Channel Layers (for WebSocket communication)

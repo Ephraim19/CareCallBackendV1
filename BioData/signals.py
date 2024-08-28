@@ -5,20 +5,23 @@ from .models import Member,memberTaskBase,Whatsapp
 from django.utils.timezone import now, timedelta
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.core.serializers import serialize
 
-# @receiver(post_save, sender=Whatsapp)
-# def notify_update(sender, instance, created, **kwargs):
-#     channel_layer = get_channel_layer()
-#     message = {
-#         'type': 'chat_message',
-#         'message': f'Entry {instance.pk} in Whatsapp has been {"created" if created else "updated"}.'
-#     }
+@receiver(post_save, sender=Whatsapp)
+def notify_update(sender, instance, created, **kwargs):
+    # member_id = Whatsapp.objects.all().last().memberId
+
+    channel_layer = get_channel_layer()
+    message = {
+        'type': 'chat_message',
+        'message': 'success',
+    }
     
-#     # Send a message to the WebSocket group
-#     async_to_sync(channel_layer.group_send)(
-#         "your_group_name",  # Replace with your actual group name
-#         message
-#     )
+    # Send a message to the WebSocket group
+    async_to_sync(channel_layer.group_send)(
+        "your_group_name",  # Replace with your actual group name
+        message
+    )
 
 @receiver(post_save, sender=Member)
 def complete_onboarding(sender, instance, created, **kwargs):
