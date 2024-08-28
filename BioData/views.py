@@ -1399,10 +1399,11 @@ class Whatsapp_Webhook(APIView):
         print('saving') 
         aa1 = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][3:]
         print(aa1)
-        print(Member.objects.filter(memberPhone = int(aa1)))
+        aa2 = Member.objects.filter(memberPhone = int(aa1))[0].id
+        print(aa2)
         print(" ")
         Whatsapp.objects.create(
-            memberId = Member.objects.get(id=27),
+            memberId = Member.objects.get(id=aa2),
             message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body'],
             messageStatus = 'received',
             messageFrom = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'],
