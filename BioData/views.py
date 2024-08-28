@@ -1397,6 +1397,8 @@ class Whatsapp_Webhook(APIView):
         print(" ")
 
         print('saving') 
+        print(data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id'][4:])
+        print(Member.objects.get(memberPhone = data['entry'][0]['changes'][0]['value']['metadata']['display_phone_number'][4:]))
         print(" ")
         Whatsapp.objects.create(
             memberId = Member.objects.get(id=27),
