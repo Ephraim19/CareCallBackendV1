@@ -9,19 +9,20 @@ from django.core.serializers import serialize
 
 @receiver(post_save, sender=Whatsapp)
 def notify_update(sender, instance, created, **kwargs):
-    # member_id = Whatsapp.objects.all().last().memberId
+    member_dir = Whatsapp.objects.all().last().messageDirection
 
-    channel_layer = get_channel_layer()
-    message = {
-        'type': 'chat_message',
-        'message': 'success',
-    }
-    
-    # Send a message to the WebSocket group
-    async_to_sync(channel_layer.group_send)(
-        "your_group_name",  # Replace with your actual group name
-        message
-    )
+    if created and member_dir == 'Inbound':
+        channel_layer = get_channel_layer()
+        message = {
+            'type': 'chat_message',
+            'message': 'success'
+        }
+        
+        # Send a message to the WebSocket group
+        async_to_sync(channel_layer.group_send)(
+            "your_group_name",  # Replace with your actual group name
+            message
+        )
 
 @receiver(post_save, sender=Member)
 def complete_onboarding(sender, instance, created, **kwargs):
