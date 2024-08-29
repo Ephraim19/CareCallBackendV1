@@ -13,19 +13,26 @@ from django.db.models import Count
 import requests
 from django.views.decorators.csrf import csrf_exempt
 import json
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
 access_token = 'EAAEqkG7cBtQBO3qrK2ZBlZAlnx7uolxWlbRdrPewBmGnaW4dRDtr63M8HZBsUvrla6oZCpPqRQfdVsJYtvyu1fpCVya1FzUejfeHfZAZAR87lXT7KfZCGnXElCdv71AqCBokUncgxoc3BVGfExJHuwPtzH6tjZBumcvZBHmG5dBLbXVWEDWdX3CYWaiptoiF8HloIDFZAZBhpZAUJTSSPlTAo34ZD'
 class SearchMember(APIView):
 
     def post(self, request, *args, **kwargs):
         search_term = request.data.get('name', None)
-        print(search_term)
+        
         if search_term is not None:
-            members = Member.objects.filter(memberName__icontains=search_term)
-            serializer = MemberSerializer(members, many=True)
+
+            try:
+                search_term = int(search_term)
+                members = Member.objects.filter(id = search_term)
+                serializer = MemberSerializer(members, many=True)
+            
+            except:
+                members = Member.objects.filter(memberName__icontains=search_term)
+                serializer = MemberSerializer(members, many=True)
+            
             return Response(serializer.data)
+            
         else:
             return Response({'error': 'No search term provided'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1408,43 +1415,7 @@ class Whatsapp_Webhook(APIView):
             messageDirection = 'Inbound'
         )
         print('saved')
-
-        # Notify WebSocket group of the updated data
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     "your_group_name",
-        #     {
-        #         'type': 'chat_message',
-        #         'message': 'Data has been updated'
-        #     }
-        # )
         print(" ")
         
-        #Save mbr data
-        # clinical_data = ['bp','bs','temperature','height','weight']
-        try:
-            message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-            if message == '1':
-                print('bp')
-                BloodPressure.objects.create(
-                    memberId = Member.objects.get(id=aa2),
-                    systolic = 120,
-                    diastolic = 80,
-                    readingDate = datetime.now().date(),
-                    updatedBy = 'whatsapp'
-                )
-                
-            elif message == '2':
-                print('bs')
-            elif message == '3':
-                print('temperature')
-            elif message == '4':
-                print('height')
-            elif message == '5':
-                print('weight')
-
-        except:
-            message = 'No message'
-
         return JsonResponse({'status': 'success'}, status=200)
     
