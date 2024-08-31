@@ -216,8 +216,23 @@ class BloodPressureList(generics.ListAPIView):
     def get_queryset(self):
 
         member_id = self.request.query_params.get('memberId', None)
+        #Arrange according to the reading date
+
         if member_id is not None:
-            return BloodPressure.objects.filter(memberId=member_id)
+            mbrbps = BloodPressure.objects.filter(memberId=member_id)
+
+            # for bp in mbrbps:
+            #     date_string = bp.readingDate
+            #     date_object = datetime.strptime(date_string, "%a %b %d %Y")
+
+            # blood_pressure_readings = sorted(
+            #         mbrbps, 
+            #         key=lambda bp: date_object.date()
+            #         )
+            
+            # print(blood_pressure_readings)   
+            return mbrbps
+            
         else:
             return BloodPressure.objects.none() 
     
@@ -299,7 +314,7 @@ class TemperaturePost(generics.CreateAPIView):
         member_id = self.request.data.get('memberId',None)
         temperature = self.request.data.get('temperature',None)
         readingDate = self.request.data.get('readingDate',None)
-        updatedBy = self.request.data.get('updatedBy',None)
+        
 
         #get member instace
         member = Member.objects.get(id=member_id)
@@ -441,33 +456,6 @@ class PulsePost(generics.CreateAPIView):
     serializer_class =  PulseSerializer
 
     def perform_create(self,serializer):
-        # clinical_info = [130,80,120,60]
-        # member_id = self.request.data.get('memberId',None)
-        # pulse = self.request.data.get('pulse',None)
-        # readingDate = self.request.data.get('readingDate',None)
-        # updatedBy = self.request.data.get('updatedBy',None)
-
-        # #get member instace
-        # member = Member.objects.get(id=member_id)
-        # now = datetime.now().date() + timedelta(days=1)
-        # date_string = now.strftime("%a %b %d %Y")
-        
-        
-        # if int(systolic) > clinical_info[0] or  int(diastolic) > clinical_info[2]:
-
-        #     Task.objects.create(
-        #         memberId= member,
-        #         taskDueDate=date_string,
-        #         taskStatus='Not started',
-        #         taskAssignedTo=updatedBy  ,
-        #         task = 'Follow up for hypertension for member blood pressure reading on' + ' ' + readingDate ,
-        #         taskName = "Hypertension Follow up"
-        #     )
-        #     interpretation = 'Hypertension'
-        # else:
-        #     interpretation = 'Normal'            
-
-
         serializer.save(interpretation = 'Normal')
 
 class PulseDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -574,7 +562,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
         hr_member.HRTasks += 1
         hr_member.save()  
         
-        if int(rbs) > 140 and int(rbs) < 200:
+        if  float(rbs) > 7.8 and float(rbs) < 11.1:
 
             Task.objects.create(
                 memberId= member,
@@ -585,7 +573,7 @@ class RandomBloodSugarPost(generics.CreateAPIView):
                 taskName = "Prediabetes Follow up"
             )
             interpretation = 'Prediabetes'
-        elif int(rbs) >= 200:
+        elif float(rbs) >= 11.1:
 
             Task.objects.create(
                 memberId= member,
@@ -642,7 +630,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
         hr_member.save()  
 
 
-        if int(fbs) < 70:
+        if float(fbs) < 3.9:
 
             Task.objects.create(
                 memberId= member,
@@ -653,7 +641,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
                 taskName = "Hypoglycemia Follow up"
             )
             interpretation = 'Hypoglycemia'
-        elif int(fbs) >= 126:
+        elif float(fbs) > 5.7:
 
             Task.objects.create(
                 memberId= member,
@@ -665,7 +653,7 @@ class FastingBloodSugarPost(generics.CreateAPIView):
             )
             interpretation = 'Diabetes'
 
-        elif int(fbs) > 100 and int(fbs) < 126:
+        elif float(fbs) >= 5.7 and int(fbs) < 6.8:
 
             Task.objects.create(
                 memberId= member,
@@ -917,8 +905,11 @@ class TaskList(generics.ListAPIView):
             for task in mbrTasks:
                 date_string = task.taskDueDate
                 date_object = datetime.strptime(date_string, "%a %b %d %Y")
-                tasks_with_dates.append((task, date_object,task.taskStatus))
-            
+                # tasks_with_dates.append((task, date_object,task.taskStatus))
+
+                ovedue = datetime.now().date() > date_object.date() and task.taskStatus != "complete" and task.taskStatus != "cancelled"
+                tasks_with_dates.append((task, date_object,task.taskStatus, ovedue))
+
             tasks_with_dates_sorted = sorted( tasks_with_dates,  key=lambda x: (x[2] in ["complete", "cancelled"], x[1]))
             tasks_sorted = [task for task, date, status in tasks_with_dates_sorted]
             

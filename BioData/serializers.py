@@ -427,7 +427,7 @@ class MemberSerializer (serializers.ModelSerializer):
                   'memberPhone', 'memerEmail', 'memberPhoneTwo', 'memberOffice', 'memberHome', 
                   'memberCounty', 'memberTown', 'memberDelivery', 'memberProgram', 'memberStatus',
                  'memberOnboardingStage', 'memberCareManager', 'memberNutritionist', 'memberEngagementLead',
-                 'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone',
+                 'memberEmployer', 'memberInsurer', 'memberInsuranceId', 'memberNextOfKin', 'memberNextOfKinPhone','memberDepartment',
                   'dependants','overview','allergy','surgery','othernote','admission','family','social',
                  'condition'
                   ]

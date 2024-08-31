@@ -25,6 +25,7 @@ class Member(models.Model):
     memberInsuranceId = models.CharField(max_length=25,blank=True)
     memberNextOfKin = models.CharField(max_length=50,blank=True)
     memberNextOfKinPhone = models.IntegerField(blank=True,null=True)
+    memberDepartment = models.CharField(max_length=50,blank=True)
     
         
     class Meta:
@@ -93,7 +94,7 @@ class Family(models.Model):
 class Social(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, related_name='social', on_delete=models.CASCADE)
-    socialNotes = models.CharField(max_length=20)
+    socialNotes = models.TextField()
     atriskDueTo = models.CharField(max_length=50)
     
     

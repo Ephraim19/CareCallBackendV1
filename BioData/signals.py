@@ -26,7 +26,8 @@ def notify_update(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Member)
 def complete_onboarding(sender, instance, created, **kwargs):
-    if created:  # Check if a new instance of Member is created
+    
+    if created :  # Check if a new instance of Member is created
         memberTaskBase.objects.create(
             memberId=instance,
             taskDate=now().date() + timedelta(days=3),
