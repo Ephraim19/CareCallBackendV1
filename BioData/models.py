@@ -105,6 +105,7 @@ class InteractionLog(models.Model):
     updatedBy = models.EmailField()
     channelDirection = models.CharField(max_length=20,blank=True,null=True)
     interactionDetails = models.TextField()
+    taskId = models.ForeignKey('Task', related_name='taskId',null=True,blank=True, on_delete=models.CASCADE)
 
 class BloodPressure(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -246,7 +247,7 @@ class Task(models.Model):
     taskStatus = models.CharField(max_length=20)
     taskAssignedTo = models.EmailField(default='machayoephraim@gmail.com')
     taskAppointmentId = models.ForeignKey(Appointments, related_name='taskAppointmentId',null=True,blank=True, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return self.taskName
 

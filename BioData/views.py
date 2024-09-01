@@ -900,19 +900,24 @@ class TaskList(generics.ListAPIView):
         
         if member_id is not None:
             mbrTasks = Task.objects.filter(memberId=member_id)
-
+            print(mbrTasks)
+            
             tasks_with_dates = []
             for task in mbrTasks:
                 date_string = task.taskDueDate
                 date_object = datetime.strptime(date_string, "%a %b %d %Y")
-                # tasks_with_dates.append((task, date_object,task.taskStatus))
-
-                ovedue = datetime.now().date() > date_object.date() and task.taskStatus != "complete" and task.taskStatus != "cancelled"
-                tasks_with_dates.append((task, date_object,task.taskStatus, ovedue))
-
-            tasks_with_dates_sorted = sorted( tasks_with_dates,  key=lambda x: (x[2] in ["complete", "cancelled"], x[1]))
-            tasks_sorted = [task for task, date, status in tasks_with_dates_sorted]
-            
+                overdue = datetime.now().date() > date_object.date() and task.taskStatus != "complete" and task.taskStatus != "cancelled"
+                tasks_with_dates.append((task, date_object, task.taskStatus, overdue))
+                
+            tasks_with_dates_sorted = sorted(
+                    tasks_with_dates,
+                    key=lambda x: (
+                        x[2] in ["complete", "cancelled"],  # First, sort by status (completed/cancelled last)
+                        x[1]  # Then, sort by due date
+                        )
+                        )
+            tasks_sorted = [task[0] for task in tasks_with_dates_sorted]
+            # print(tasks_sorted)
             return tasks_sorted
 
         else:
