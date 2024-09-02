@@ -18,7 +18,7 @@ class Member(models.Model):
     memberStatus = models.CharField(max_length=20,blank=True)
     memberOnboardingStage = models.CharField(max_length=20,blank=True)
     memberCareManager = models.EmailField()
-    memberNutritionist = models.CharField(max_length=50,blank=True)
+    memberNutritionist = models.EmailField()
     memberEngagementLead = models.EmailField()
     memberEmployer = models.CharField(max_length=50,blank=True)
     memberInsurer = models.CharField(max_length=50,blank=True)

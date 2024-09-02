@@ -55,8 +55,9 @@ class NewMemberAdd(generics.CreateAPIView):
         #Assigne care Manager and engagement officer
         HR = HumanResource.objects.filter(HRRole = "Care Manager", HRStatus = "Active")
         HR1 = HumanResource.objects.filter(HRRole = "Engagement Lead", HRStatus = "Active")
+        HR2 = HumanResource.objects.filter(HRRole = "Nutritionist", HRStatus = "Active")
 
-     #Set the Doctor, nutritionist or Psychologist assignee to task and add task to HR
+     #Set the Care M, nutritionist or Engagement L assignee to task and add task to HR
         hr_with_lowest_tasks = HR.order_by('HRTasks').first()
         hr_with_lowest_tasks.HRTasks += 1
         hr_with_lowest_tasks.save()         
@@ -64,8 +65,12 @@ class NewMemberAdd(generics.CreateAPIView):
         hr_with_lowest_tasks1 = HR1.order_by('HRTasks').first()
         hr_with_lowest_tasks1.HRTasks += 1
         hr_with_lowest_tasks1.save()  
+
+        hr_with_lowest_tasks2 = HR2.order_by('HRTasks').first()
+        hr_with_lowest_tasks2.HRTasks += 1
+        hr_with_lowest_tasks2.save()  
         
-        serializer.save(memberCareManager = hr_with_lowest_tasks.HREmail, memberEngagementLead = hr_with_lowest_tasks1.HREmail)
+        serializer.save(memberCareManager = hr_with_lowest_tasks.HREmail, memberEngagementLead = hr_with_lowest_tasks1.HREmail,memberNutritionist = hr_with_lowest_tasks2.HREmail)
 
 
 class DependantList(generics.ListCreateAPIView):
@@ -931,14 +936,29 @@ class TaskListPost(generics.CreateAPIView):
     def perform_create(self, serializer):
         #Get the dpt
         dpt = self.request.data.get('department', None)
+        member_id = self.request.data.get('memberId', None)
+        member = Member.objects.get(id=member_id)
 
-     #Set the Doctor, nutritionist or Psychologist assignee to task and add task to HR
-        HR = HumanResource.objects.filter(HRRole = dpt, HRStatus = "Active")
-        hr_with_lowest_tasks = HR.order_by('HRTasks').first()
-        hr_with_lowest_tasks.HRTasks += 1
-        hr_with_lowest_tasks.save()  # Save the updated object
+     #Set the Doctor or Psychologist assignee to task and add task to HR
+        if dpt == "Doctor" or dpt == "Psychologist":
+            HR = HumanResource.objects.filter(HRRole = dpt, HRStatus = "Active")
+            hr_with_lowest_tasks = HR.order_by('HRTasks').first()
+            hr_with_lowest_tasks.HRTasks += 1
+            hr_with_lowest_tasks.save()  # Save the updated object
+            serializer.save(taskAssignedTo = hr_with_lowest_tasks.HREmail)
 
-        serializer.save(taskAssignedTo = hr_with_lowest_tasks.HREmail)
+        elif dpt == "Care Manager":
+            serializer.save(taskAssignedTo = member.memberCareManager)
+
+        elif dpt == "Engagement Lead":
+            serializer.save(taskAssignedTo = member.memberEngagementLead)
+        elif dpt == "Nutritionist":
+            serializer.save(taskAssignedTo = member.memberNutritionist)
+        else:
+            pass
+            
+            
+        
         
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
