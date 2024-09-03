@@ -107,5 +107,9 @@ urlpatterns = [
     path("hr/",views.HR.as_view()),
     # path('chats/', consumers.YourConsumer.as_asgi()),
 
+    path('prescription/', views.PrescriptionList.as_view() ),
+    # path('prescription/<int:pk>/', views.PrescriptionDetail.as_view() ),
+    path('prescription/post/', views.PrescriptionPost.as_view() ),
+
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

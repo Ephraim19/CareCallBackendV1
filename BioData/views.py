@@ -1,5 +1,5 @@
-from .models import Member,Task,Dependant,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,NewMemberSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Prescription,Task,Dependant,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,PrescriptionSerializer,NewMemberSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
@@ -1435,3 +1435,36 @@ class Whatsapp_Webhook(APIView):
         
         return JsonResponse({'status': 'success'}, status=200)
     
+class PrescriptionList(generics.ListAPIView):
+    serializer_class = PrescriptionSerializer
+
+    def get_queryset(self):
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Prescription.objects.filter(memberId=member_id)
+        else:
+            return Prescription.objects.none()
+        
+class PrescriptionPost(generics.CreateAPIView):
+    serializer_class = PrescriptionSerializer
+
+    def perform_create(self,serializer):
+        member_id = self.request.data.get('memberId',None)
+        prescription =  self.request.data.get('medication',None)
+        prescriptionDate = self.request.data.get('prescriptionDate',None)
+
+        #get member instace
+        member = Member.objects.get(id=member_id)
+        now = datetime.now().date() + timedelta(days=1)
+        date_string = now.strftime("%a %b %d %Y")
+
+        serializer.save()
+
+        Task.objects.create(
+            memberId= member,
+            taskDueDate=date_string,
+            taskStatus='Not started',
+            taskAssignedTo=member.memberCareManager  ,
+            task = str(member) +' '+ 'Follow up for prescription' + ' ' + prescription + ' ' + 'for member on' + ' ' + prescriptionDate ,
+            taskName = "Prescription Follow up"
+        )

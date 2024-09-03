@@ -309,4 +309,16 @@ class Whatsapp(models.Model):
     
     def __str__(self):
         return self.message
+
+class Prescription(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)   
+    medication = models.CharField(max_length=50)
+    medicationStartDate =  models.CharField(max_length=50)
+    medicationDosage = models.IntegerField()
+    medicationFrequency = models.IntegerField()
+    medicationDuration = models.IntegerField()
+
+    def __str__(self):
+        return self.medication
     

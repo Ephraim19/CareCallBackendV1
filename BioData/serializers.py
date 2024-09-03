@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Whatsapp,Task,Dependant,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Whatsapp,Task,Dependant,Prescription,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -475,3 +475,22 @@ class MemberSerializer (serializers.ModelSerializer):
 
             
    
+class PrescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prescription
+        fields = ['id', 'memberId', 'prescriptionDate', 'prescriptionDrug', 'prescriptionDosage', 'prescriptionFrequency', 'prescriptionDuration']
+        
+        def create(self, validated_data):
+            """
+            Create and return a new `Prescription` instance, given the validated data.
+            """
+            return Prescription.objects.create(**validated_data)
+        
+        def update(self, instance, validated_data):
+            instance.prescriptionDate = validated_data.get('prescriptionDate', instance.prescriptionDate)
+            instance.prescriptionDrug = validated_data.get('prescriptionDrug', instance.prescriptionDrug)
+            instance.prescriptionDosage = validated_data.get('prescriptionDosage', instance.prescriptionDosage)
+            instance.prescriptionFrequency = validated_data.get('prescriptionFrequency', instance.prescriptionFrequency)
+            instance.prescriptionDuration = validated_data.get('prescriptionDuration', instance.prescriptionDuration)
+            instance.save()
+            return instance
