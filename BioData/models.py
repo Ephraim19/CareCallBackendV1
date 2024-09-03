@@ -313,12 +313,12 @@ class Whatsapp(models.Model):
 class Prescription(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     memberId = models.ForeignKey(Member, on_delete=models.CASCADE)   
-    medication = models.CharField(max_length=50)
-    medicationStartDate =  models.CharField(max_length=50)
-    medicationDosage = models.IntegerField()
-    medicationFrequency = models.IntegerField()
-    medicationDuration = models.IntegerField()
+    prescriptionDrug = models.CharField(max_length=50)
+    prescriptionDate =  models.CharField(max_length=50)
+    prescriptionDosage = models.IntegerField()
+    prescriptionFrequency = models.IntegerField()
+    prescriptionDuration = models.IntegerField()
 
     def __str__(self):
-        return self.medication
+        return self.prescriptionDrug
     

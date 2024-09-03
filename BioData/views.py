@@ -1450,13 +1450,16 @@ class PrescriptionPost(generics.CreateAPIView):
 
     def perform_create(self,serializer):
         member_id = self.request.data.get('memberId',None)
-        prescription =  self.request.data.get('medication',None)
+        prescription =  self.request.data.get('prescriptionDrug',None)
         prescriptionDate = self.request.data.get('prescriptionDate',None)
+        prescriptionDuration = self.request.data.get('prescriptionDuration',None)
 
         #get member instace
         member = Member.objects.get(id=member_id)
-        now = datetime.now().date() + timedelta(days=1)
-        date_string = now.strftime("%a %b %d %Y")
+
+        date_object = datetime.strptime(prescriptionDate, "%Y-%m-%d").date()
+        due = date_object + timedelta(days= int(prescriptionDuration))
+        date_string = due.strftime("%a %b %d %Y")
 
         serializer.save()
 
@@ -1465,6 +1468,6 @@ class PrescriptionPost(generics.CreateAPIView):
             taskDueDate=date_string,
             taskStatus='Not started',
             taskAssignedTo=member.memberCareManager  ,
-            task = str(member) +' '+ 'Follow up for prescription' + ' ' + prescription + ' ' + 'for member on' + ' ' + prescriptionDate ,
+            task = str(member) +' '+ 'Follow up for prescription' + ' ' + prescription + ' ' + 'for member prescribed on' + ' ' + prescriptionDate ,
             taskName = "Prescription Follow up"
         )
