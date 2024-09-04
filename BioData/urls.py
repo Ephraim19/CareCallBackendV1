@@ -111,5 +111,12 @@ urlpatterns = [
     # path('prescription/<int:pk>/', views.PrescriptionDetail.as_view() ),
     path('prescription/post/', views.PrescriptionPost.as_view() ),
 
+    path('nutritionist/', views.NutritionistList.as_view() ),
+    # path('nutritionist/<int:pk>/', views.NutritionistDetail.as_view() ),
+    path('nutritionist/post/', views.NutritionistPost.as_view() ),
+
+    path('psychologist/', views.PsychologistList.as_view() ),
+    # path('psychologist/<int:pk>/', views.PsychologistDetail.as_view() ),
+    path('psychologist/post/', views.PsychologistPost.as_view() ),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

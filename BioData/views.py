@@ -1,5 +1,5 @@
-from .models import Member,Prescription,Task,Dependant,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,PrescriptionSerializer,NewMemberSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Prescription,Task,Dependant,Psychologist,Nutritionist,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,PrescriptionSerializer,NewMemberSerializer,NutritionistSerializer,PsychologistSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
@@ -1471,3 +1471,32 @@ class PrescriptionPost(generics.CreateAPIView):
             task = str(member) +' '+ 'Follow up for prescription' + ' ' + prescription + ' ' + 'for member prescribed on' + ' ' + prescriptionDate ,
             taskName = "Prescription Follow up"
         )
+
+class NutritionistList(generics.ListAPIView):
+    serializer_class = NutritionistSerializer
+    
+    def get_queryset(self):
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Nutritionist.objects.filter(memberId=member_id)
+        else:
+            return Nutritionist.objects.none()
+        
+
+class NutritionistPost(generics.CreateAPIView):
+    serializer_class = NutritionistSerializer
+    queryset = Nutritionist.objects.all()
+
+class PsychologistList(generics.ListAPIView):
+    serializer_class = PsychologistSerializer
+    
+    def get_queryset(self):
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return Psychologist.objects.filter(memberId=member_id)
+        else:
+            return Psychologist.objects.none()
+        
+class PsychologistPost(generics.CreateAPIView):
+    serializer_class = PsychologistSerializer
+    queryset = Psychologist.objects.all()

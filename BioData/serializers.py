@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Whatsapp,Task,Dependant,Prescription,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Whatsapp,Task,Dependant,Prescription,Psychologist,Nutritionist,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -494,3 +494,22 @@ class PrescriptionSerializer(serializers.ModelSerializer):
             instance.prescriptionDuration = validated_data.get('prescriptionDuration', instance.prescriptionDuration)
             instance.save()
             return instance
+        
+class NutritionistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nutritionist
+        fields = ['id', 'memberId', 'nutritionistDate', 'nutritionistAssesment', 'nutritionistDiagnosis','nutritionistRecommendations','updatedBy']
+
+        def create(self, validated_data):
+            return Nutritionist.objects.create(**validated_data)
+        
+
+class PsychologistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Psychologist
+        fields = ['id', 'memberId', 'psychologistDate', 'psychologistAssesment', 'psychologistDiagnosis','psychologistRecommendations','updatedBy']
+
+        def create(self, validated_data):
+            return Psychologist.objects.create(**validated_data)
+        
+        

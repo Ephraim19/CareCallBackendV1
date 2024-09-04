@@ -321,4 +321,27 @@ class Prescription(models.Model):
 
     def __str__(self):
         return self.prescriptionDrug
-    
+
+class Psychologist(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)   
+    psychologistAssesment = models.TextField()
+    psychologistDiagnosis =  models.TextField()
+    psychologistDate =  models.CharField(max_length=50)
+    psychologistRecommendations= models.TextField()
+    updatedBy = models.EmailField()
+
+    def __str__(self):
+        return self.memberId.memberName
+
+class Nutritionist(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)   
+    nutritionistAssesment = models.TextField()
+    nutritionistDiagnosis =  models.TextField()
+    nutritionistDate =  models.CharField(max_length=50)
+    nutritionistRecommendations= models.TextField()
+    updatedBy = models.EmailField()
+
+    def __str__(self):
+        return self.memberId.memberName
