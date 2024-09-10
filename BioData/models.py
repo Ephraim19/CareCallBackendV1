@@ -345,3 +345,19 @@ class Nutritionist(models.Model):
 
     def __str__(self):
         return self.memberId.memberName
+
+class Doctor(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    consultationType = models.TextField()
+    chiefComplaint = models.TextField()
+    medicalHistory = models.TextField()
+    reviewOfSystems = models.TextField()
+    diagnosis = models.TextField()
+    nextSteps = models.TextField()
+    updatedBy = models.EmailField()
+    comments = models.TextField()
+    consultationDate = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.memberId.memberName

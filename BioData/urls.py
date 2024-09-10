@@ -118,5 +118,10 @@ urlpatterns = [
     path('psychologist/', views.PsychologistList.as_view() ),
     # path('psychologist/<int:pk>/', views.PsychologistDetail.as_view() ),
     path('psychologist/post/', views.PsychologistPost.as_view() ),
+
+    path('doctor/', views.DoctorList.as_view() ),
+    # path('doctor/<int:pk>/', views.DoctorDetail.as_view() ),
+    path('doctor/post/', views.DoctorPost.as_view() ),
+     
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
