@@ -361,3 +361,20 @@ class Doctor(models.Model):
 
     def __str__(self):
         return self.memberId.memberName
+    
+class BodyComposition(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    memberId = models.ForeignKey(Member, on_delete=models.CASCADE)
+    updatedBy = models.EmailField()
+    readingDate = models.CharField(max_length=100)
+    bodyFat = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    muscleMass = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    boneMass = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    visceralFat = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    DCI = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    metabolicAge = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    bodyWater = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    # interpretation = models.CharField(max_length=50,null=True,blank=True)
+
+    def __str__(self):
+        return self.memberId.memberName

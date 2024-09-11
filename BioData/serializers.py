@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Member,Whatsapp,Doctor,Task,Dependant,Prescription,Psychologist,Nutritionist,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
+from .models import Member,Whatsapp,Doctor,Task,Dependant,BodyComposition,Prescription,Psychologist,Nutritionist,Appointments,memberTaskBase,HumanResource,Overview,Allergy,Condition,Surgery,BodyMassIndex,Othernote,FastingBloodSugar,GlycatedHaemoglobin,Admission,RandomBloodSugar,RespiratoryRate,Family,Social,InteractionLog,BloodPressure,PulseRate,Temperature,Oxygen
 
 class DependantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -520,3 +520,11 @@ class DoctorSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
             return Doctor.objects.create(**validated_data)
         
+
+class BodyCompositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BodyComposition 
+        fields = '__all__'
+
+        def create(self, validated_data):
+            return BodyComposition.objects.create(**validated_data)

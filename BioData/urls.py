@@ -122,6 +122,10 @@ urlpatterns = [
     path('doctor/', views.DoctorList.as_view() ),
     # path('doctor/<int:pk>/', views.DoctorDetail.as_view() ),
     path('doctor/post/', views.DoctorPost.as_view() ),
-     
+
+    path('bodycomposition/', views.BodyCompositionList.as_view() ),
+    # path('bodycomposition/<int:pk>/', views.BodyCompositionDetail.as_view() ),
+    path('bodycomposition/post/', views.BodyCompositionPost.as_view() ),
+ 
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

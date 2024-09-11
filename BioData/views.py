@@ -1,5 +1,5 @@
-from .models import Member,Prescription,Task,Dependant,Doctor,Psychologist,Nutritionist,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
-from .serializers import MemberSerializer,DoctorSerializer,PrescriptionSerializer,NewMemberSerializer,NutritionistSerializer,PsychologistSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
+from .models import Member,Prescription,Task,Dependant,BodyComposition,Doctor,Psychologist,Nutritionist,memberTaskBase,Appointments,Condition,Whatsapp,Overview,Allergy,HumanResource,Surgery,Othernote,BodyMassIndex,RespiratoryRate,GlycatedHaemoglobin,FastingBloodSugar,RandomBloodSugar,Admission,Family,Social,PulseRate,InteractionLog,BloodPressure,Temperature,Oxygen
+from .serializers import MemberSerializer,DoctorSerializer,PrescriptionSerializer,BodyCompositionSerializer,NewMemberSerializer,NutritionistSerializer,PsychologistSerializer,WhatsappSerializer,AppointmentsSerializer,TaskSerializer,HrSerializer,MemberJourneySerializer,DependantSerializer,OverviewSerializer,ConditionSerializer,BodyMassIndexSerializer,GlycateHaemoglobinSerializer,RespiratorySerializer,FastingBloodSugarSerializer,RandomBloodSugarSerializer,AllergySerializer,PulseSerializer,OxygenSerializer,TemperatureSerializer,BloodPressureSerializer,SurgerySerializer,OthernoteSerializer,AdmissionSerializer,FamilySerializer,SocialSerializer,InteractionSerializer
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
@@ -1526,3 +1526,18 @@ class DoctorList(generics.ListAPIView):
 class DoctorPost(generics.CreateAPIView):
     serializer_class = DoctorSerializer
     queryset = Doctor.objects.all()
+
+
+class BodyCompositionList(generics.ListAPIView):
+    serializer_class = BodyCompositionSerializer
+    
+    def get_queryset(self):
+        member_id = self.request.query_params.get('memberId', None)
+        if member_id is not None:
+            return BodyComposition.objects.filter(memberId=member_id)
+        else:
+            return BodyComposition.objects.none()
+        
+class BodyCompositionPost(generics.CreateAPIView):
+    serializer_class = BodyCompositionSerializer
+    queryset = BodyComposition.objects.all()
